@@ -1,9 +1,5 @@
 <?php
-require_once "../config/db.php";
-
-function getConnection() {
-    return new mysqli(host, user, pass, db);
-}
+require_once __DIR__ . '/../../config/db.php';
 
 function getUserID($email) {
     $db = getConnection();
@@ -21,7 +17,7 @@ function getUserID($email) {
 function getHashedPassword($email) {
     $db = getConnection();
 
-    $stmt = $db->prepare("SELECT password FROM users WHERE email = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT pass FROM users WHERE email = ? LIMIT 1");
     $stmt->bind_param("s", $email);
 
     $stmt->execute();
@@ -34,7 +30,7 @@ function getHashedPassword($email) {
 function getNickname($userID) {
     $db = getConnection();
 
-    $stmt = $db->prepare("SELECT nickname FROM users WHERE id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT nick FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param("i", $userID);
 
     $stmt->execute();
@@ -44,23 +40,16 @@ function getNickname($userID) {
     return $result;
 }
 
-function getVerificationStatus($id) {
+function checkActivated($userID) {
     $db = getConnection();
 
-    $stmt = $db->prepare("SELECT verified FROM users WHERE id = ? LIMIT 1");
-    $stmt->bind_param("i", $id);
+    $stmt = $db->prepare("SELECT activated FROM users WHERE id = ? LIMIT 1");
+    $stmt->bind_param("i", $userID);
 
     $stmt->execute();
-    $stmt->bind_result($verified);
-    $result = $stmt->fetch() ? $verified : null;
+    $stmt->bind_result($activated);
+    $result = $stmt->fetch() ? $activated : null;
 
     return $result;
-}
-
-function setVerified($id) {
-    $db = getConnection();
-    $stmt = $db->prepare("UPDATE users SET verified = 1 WHERE id = ? LIMIT 1");
-    $stmt->bind_param("i", $id);
-    return $stmt->execute();
 }
 ?>

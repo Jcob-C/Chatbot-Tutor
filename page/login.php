@@ -1,7 +1,7 @@
 <?php
 require_once '../utils/CleanerFunctions.php';
 require_once '../utils/PopupMessages.php';
-require_once '../utils/Database.php';
+require_once '../utils/database/Users.php';
 
 session_start();
 checkPost();
@@ -42,6 +42,6 @@ function login() {
         <input type="password" name="password" required>
         <button type="submit" name="login">Log In</button>
     </form>
-    <a href="register/account.php">Create Account</a>
+    <a href="register.php">Create Account</a>
 </body>
 </html>

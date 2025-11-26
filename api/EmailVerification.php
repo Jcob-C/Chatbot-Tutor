@@ -3,7 +3,8 @@ require __DIR__ . '/../lib/PHPMailer-7.0.1/src/Exception.php';
 require __DIR__ . '/../lib/PHPMailer-7.0.1/src/PHPMailer.php';
 require __DIR__ . '/../lib/PHPMailer-7.0.1/src/SMTP.php';
 require_once __DIR__ . '/../utils/database/VerificationCodes.php'; 
-require_once __DIR__ . '/../config/email.php'; 
+require_once __DIR__ . '/../utils/database/Users.php'; 
+require_once __DIR__ . '/../config/mail.php'; 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -17,6 +18,11 @@ $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo "Email invalid!";
+    exit;
+}
+
+if (getUserID($email)) {
+    echo "Email is already registered.";
     exit;
 }
 
@@ -40,13 +46,13 @@ try {
     $mail->Port = 587;
 
     // Recipients
-    $mail->setFrom(email, 'Verification');
+    $mail->setFrom(email, 'Chatbot-Tutor');
     $mail->addAddress($email);
 
     // Content
     $mail->isHTML(true);
     $mail->Subject = 'Your Verification Code';
-    $mail->Body    = "Your verification code is: <b>{$verificationCode}</b>";
+    $mail->Body    = "Your verification code is <b>{$verificationCode}</b> and it expires in <b>5 minutes</b>.";
 
     // Send email
     $mail->send();

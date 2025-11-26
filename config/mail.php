@@ -1,4 +1,4 @@
 <?php
 const email = "";
-const emailPass = "";
+const appPass = "";
 ?>

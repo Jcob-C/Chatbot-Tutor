@@ -19,62 +19,60 @@
         <button type="button" onclick="submitRegisterForm()">Register</button>
     </form>
     
-<script src="../utils/PopupMessages.js"></script>
-<script>
-    const registerForm = document.getElementById('registerForm');
+    <script src="../utils/PopupMessages.js"></script>
+    <script>
+        const registerForm = document.getElementById('registerForm');
 
-    async function requestVerificationCode() {
-        const email = registerForm.email.value.trim();
+        async function requestVerificationCode() {
+            const email = registerForm.email.value.trim();
 
-        if (!email) {
-            displayPopupMessage("Please enter your email first.");
-            return;
-        }
-
-        try {
-            const response = await fetch("../api/EmailVerification.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: "email=" + encodeURIComponent(email)
-            });
-
-            // Receive PHP output
-            const data = await response.text();
-            displayPopupMessage(data);
-
-        } catch (err) {
-            displayPopupMessage("Error requesting verification code.");
-            console.error(err);
-        }
-    }
-
-    async function submitRegisterForm() {
-        const formData = new FormData(registerForm);
-
-        if (formData.get("password") !== formData.get("confirmPassword")) {
-            displayPopupMessage("Passwords do not match.");
-            return;
-        }
-
-        try {
-            const response = await fetch("../api/Register.php", {
-                method: "POST",
-                body: formData
-            });
-
-            // Receive PHP output
-            const data = await response.text();
-            displayPopupMessage(data);
-
-            if (data.toLowerCase().includes("success")) {
-                window.location.href = "login.php";
+            if (!email) {
+                displayPopupMessage("Please enter your email first.");
+                return;
             }
 
-        } catch (err) {
-            displayPopupMessage("Registration failed.");
-            console.error(err);
+            try {
+                const response = await fetch("../api/EmailVerification.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "email=" + encodeURIComponent(email)
+                });
+
+                const data = await response.text();
+                displayPopupMessage(data);
+
+            } catch (err) {
+                displayPopupMessage("Error requesting verification code.");
+                console.error(err);
+            }
         }
-    }
-</script>
+
+        async function submitRegisterForm() {
+            const formData = new FormData(registerForm);
+
+            if (formData.get("password") !== formData.get("confirmPassword")) {
+                displayPopupMessage("Passwords do not match.");
+                return;
+            }
+
+            try {
+                const response = await fetch("../api/Register.php", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.text();
+                displayPopupMessage(data);
+
+                if (data.toLowerCase().includes("success")) {
+                    window.location.href = "login.php";
+                }
+
+            } catch (err) {
+                displayPopupMessage("Registration failed.");
+                console.error(err);
+            }
+        }
+    </script>
 </body>
 </html>

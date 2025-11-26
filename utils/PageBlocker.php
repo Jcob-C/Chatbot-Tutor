@@ -1,22 +1,23 @@
 <?php
+require_once 'CleanerFunctions.php';
 require_once 'database/Users.php';
 
-function checkUserID() {
+function loginBlock() {
     if (!isset($_SESSION['userID']) || false == checkActivated($_SESSION['userID'])) {
-        header("Location: login.php");
-        exit;
+        resetSession();
+        headTo('../page/login.php');
     }
 }
 
-function checkUserRole() {
-    
+function redirectAdmin() {
+    if (getUserRole($_SESSION['userID']) === 'admin') {
+        headTo('../page/admin.php');
+    }
 }
 
-function checkUserVerification() {
-
-}
-
-function checkLastSession() {
-    
+function redirectLearner() {
+    if (getUserRole($_SESSION['userID']) === 'learner') {
+        headTo('../page/home.php');
+    }
 }
 ?>

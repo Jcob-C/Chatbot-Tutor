@@ -14,6 +14,19 @@ function getUserID($email) {
     return $result;
 }
 
+function getUserRole($userID) {
+    $db = getConnection();
+
+    $stmt = $db->prepare("SELECT acc_role FROM users WHERE id = ? LIMIT 1");
+    $stmt->bind_param("i", $userID);
+
+    $stmt->execute();
+    $stmt->bind_result($role);
+    $result = $stmt->fetch() ? $role : null;
+
+    return $result;
+}
+
 function getHashedPassword($email) {
     $db = getConnection();
 

@@ -19,7 +19,7 @@
         <button type="button" onclick="submitRegisterForm()">Register</button>
     </form>
     
-    <script src="../utils/PopupMessages.js"></script>
+    <script src="../utils/popupmessages/front.js"></script>
     <script>
         const registerForm = document.getElementById('registerForm');
 

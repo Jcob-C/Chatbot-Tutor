@@ -1,6 +1,6 @@
 <?php
 require_once '../utils/CleanerFunctions.php';
-require_once '../utils/PopupMessages.php';
+require_once '../utils/popupmessages/back.php';
 require_once '../utils/database/Users.php';
 
 session_start();
@@ -20,8 +20,13 @@ function login() {
 
     if (password_verify($cleanPassword, getHashedPassword($cleanEmail))) {
         $_SESSION['userID'] = getUserID($cleanEmail);
-        header("Location: home.php");
-        exit;
+
+        if (getUserRole($_SESSION['userID']) === 'admin') {
+            headTo("home.php");
+        }
+        else {
+            headTo("home.php");
+        }
     }
     else {
         setNewPopupMessage("Invalid Login!");

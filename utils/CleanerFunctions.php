@@ -6,12 +6,16 @@ function headTo($destination) {
 
 function clearPost() {
     if (!empty($_POST)) {
-        headto($_SERVER['PHP_SELF']);
-        exit;
+        headTo($_SERVER['PHP_SELF']);
     }
 }
 
 function cleanHTML($text) {
     return htmlspecialchars(trim($text), ENT_QUOTES, 'UTF-8');
+}
+
+function resetSession() {
+    $_SESSION = [];
+    session_destroy();
 }
 ?>

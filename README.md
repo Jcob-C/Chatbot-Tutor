@@ -1,4 +1,58 @@
-# **Developer Guide**
+## **Database Setup**
+
+```sql
+CREATE DATABASE chatbot_tutor;
+USE chatbot_tutor;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    activated BOOLEAN NOT NULL DEFAULT TRUE,
+    acc_role VARCHAR(255) NOT NULL DEFAULT 'learner',
+    email VARCHAR(255) NOT NULL UNIQUE,
+    nick VARCHAR(255) NOT NULL,
+    pass VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE verification_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    code INT NOT NULL,
+    expires TIMESTAMP NOT NULL
+);
+
+CREATE TABLE topics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    descr TEXT NOT NULL,
+    clicks INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE feedbacks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    descr TEXT NOT NULL,
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tutor_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    pre_score INT NOT NULL,
+    post_score INT NOT NULL,
+    concluded DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE session_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    session_id INT NOT NULL,
+    text_message TEXT NOT NULL,
+    FOREIGN KEY (session_id) REFERENCES tutoring_sessions(id) ON DELETE CASCADE
+);
+```
 
 ## **Project Structure**
 
@@ -13,8 +67,6 @@
 │     └── database/ # CRUD functions per database table
 └── index.php       # Entry point
 ```
-
----
 
 ## **Folder Purposes**
 
@@ -59,7 +111,7 @@
 
 ---
 
-# **How to Build New Features**
+## **How to Build New Features**
 
 1. **Add/modify the page** → `/page`
 2. **Create API endpoints if needed** → `/api`
@@ -69,61 +121,9 @@
 
 ---
 
-# **Best Practices**
+## **Best Practices**
 
 * Keep SQL only in `/utils/database`.
 * Reuse utility functions—avoid duplicating code.
 * Always validate and sanitize user input.
 * Never expose production secrets.
-
----
-
-# **Database Setup**
-
-```sql
-CREATE DATABASE chatbot_tutor;
-USE chatbot_tutor;
-
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    activated BOOLEAN NOT NULL DEFAULT TRUE,
-    role VARCHAR(10) NOT NULL DEFAULT 'learner',
-    email VARCHAR(255) NOT NULL UNIQUE,
-    nick VARCHAR(255) NOT NULL,
-    pass VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE verification_codes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    code INT NOT NULL,
-    expires TIMESTAMP NOT NULL
-);
-
-CREATE TABLE topics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    desc TEXT NOT NULL,
-    clicks INT NOT NULL DEFAULT 0
-);
-
-CREATE TABLE feedbacks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    desc TEXT NOT NULL,
-    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE tutoring_sessions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    topic VARCHAR(255) NOT NULL,
-    pre_score INT NOT NULL,
-    post_score INT NOT NULL,
-    messages_summary TEXT NOT NULL,
-    messages JSON NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-```

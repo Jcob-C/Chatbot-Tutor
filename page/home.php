@@ -3,20 +3,20 @@ require_once '../utils/CleanerFunctions.php';
 require_once '../utils/PageBlocker.php';
 
 session_start();
-checkUserID();
+loginBlock();
+redirectAdmin();
 checkPost();
 
 function checkPost() {
     if (isset($_POST['logout'])) {
-        logout();
+        resetSession();
+        headTo('login.php');
+    }
+    if (isset($_POST['startSession'])) {
+        resetSession();
+        headTo('login.php');
     }
     clearPost();
-}
-
-function logout() {
-    $_SESSION = [];
-    session_destroy();
-    headTo("login.php");
 }
 ?>
 
@@ -30,6 +30,9 @@ function logout() {
 <body>
     <form method="post">
         <button type="submit" name="logout">Log Out</button>
+    </form>  
+    <form method="post">
+        <button type="submit" name="startSession">Start New Session</button>
     </form>  
 </body>
 </html>

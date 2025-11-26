@@ -1,4 +1,84 @@
-# Database Setup
+# **Developer Guide**
+
+## **Project Structure**
+
+```
+/
+├── api/            # Backend endpoints for JS
+├── assets/         # CSS, images, fonts
+├── config/         # Environment configs (DB, API keys)
+├── lib/            # Third-party libraries or shared classes
+├── page/           # User-facing pages
+├── utils/          # Helper functions
+│     └── database/ # CRUD functions per database table
+└── index.php       # Entry point
+```
+
+---
+
+## **Folder Purposes**
+
+### **/page — User Pages**
+
+* All browser-visible pages.
+* Contains mainly PHP and HTML.
+* Try to utilize `/api`, `/utils`, and `/utils/database` to avoid writing messy backend logic here.
+
+### **/api — Backend Endpoints**
+
+* Handles AJAX/fetch requests.
+* Validates input → calls utils/database → returns data.
+* Keep simple: no SQL directly here.
+
+### **/assets — Static Files**
+
+* Stylesheets, images, fonts.
+* No backend logic or sensitive data.
+
+### **/config — Environment Settings**
+
+* Database credentials.
+* API keys.
+* Never hardcode secrets elsewhere.
+
+### **/lib — Libraries**
+
+* External libraries or shared internal classes.
+* Not for app-specific business logic.
+
+### **/utils — Helper Functions**
+
+* Shared utility logic (validation, mini-systems, authentication, etc.).
+* Keep files focused on one topic.
+
+### **/utils/database — CRUD by Table**
+
+* Each database table has its own file (e.g., `users.php`, `posts.php`).
+* Contains **all SQL queries**.
+* No SQL in `/api` or `/page`.
+
+---
+
+# **How to Build New Features**
+
+1. **Add/modify the page** → `/page`
+2. **Create API endpoints if needed** → `/api`
+3. **Add or update database functions** → `/utils/database`
+4. **Create or find helper functions** if reusable → `/utils`
+5. **Add or find config values** if environment-dependent → `/config`
+
+---
+
+# **Best Practices**
+
+* Keep SQL only in `/utils/database`.
+* Reuse utility functions—avoid duplicating code.
+* Always validate and sanitize user input.
+* Never expose production secrets.
+
+---
+
+# **Database Setup**
 
 ```sql
 CREATE DATABASE chatbot_tutor;
@@ -7,6 +87,7 @@ USE chatbot_tutor;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     activated BOOLEAN NOT NULL DEFAULT TRUE,
+    role VARCHAR(10) NOT NULL DEFAULT 'learner',
     email VARCHAR(255) NOT NULL UNIQUE,
     nick VARCHAR(255) NOT NULL,
     pass VARCHAR(255) NOT NULL
@@ -38,12 +119,11 @@ CREATE TABLE feedbacks (
 CREATE TABLE tutoring_sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    topic_id INT NOT NULL,
+    topic VARCHAR(255) NOT NULL,
     pre_score INT NOT NULL,
     post_score INT NOT NULL,
-    summary TEXT NOT NULL,
+    messages_summary TEXT NOT NULL,
     messages JSON NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ```

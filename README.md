@@ -43,6 +43,7 @@ CREATE TABLE tutor_sessions (
     pre_score INT NOT NULL,
     post_score INT NOT NULL,
     messages JSON NOT NULL,
+    summary TEXT NOT NULL,
     concluded DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
@@ -67,7 +68,11 @@ FOR REFERENCE THIS IS THE "../assets/theme.css":
     --black: #1a1a1a;
 }
 body {
+    min-height: 100vh;        
     background: linear-gradient(135deg, var(--black) 0%, var(--dark-purple) 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;       
 }
 .text-brand { 
     color: var(--primary-purple) !important; 
@@ -111,7 +116,7 @@ FONT SIZES & WEIGHTS (based on Bootstrap classes used):
 - Default paragraph text: ~1rem (16px), normal weight
 
 BRANDING:
-The TutorChat logo must appear somewhere in the layout:
+The TutorChat logo must appear somewhere in the layout regardless of size:
 <div class="text-center mb-4">
     <h1 class="display-4 fw-bold text-white">
         <i class="bi bi-chat-dots-fill text-brand"></i> TutorChat

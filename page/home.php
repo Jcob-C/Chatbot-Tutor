@@ -2,6 +2,7 @@
 require_once '../utils/CleanerFunctions.php';
 require_once '../utils/PageBlocker.php';
 require_once '../utils/database/Users.php';
+require_once '../utils/TutorSessionSystem.php';
 
 session_start();
 loginBlock();
@@ -14,9 +15,7 @@ function checkPost() {
         headTo('login.php');
     }
     if (isset($_POST['startSession'])) {
-        $_SESSION['tutorSession'] = [];
-        $_SESSION['tutorSession']['topicID'] = 1;
-        headTo('pretest.php');
+        startNewSession(1);
     }
     clearPost();
 }

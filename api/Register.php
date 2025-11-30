@@ -30,7 +30,7 @@ if ($storedCode != $code) {
 }
 
 if (createUser($email, $nickname, $password)) {
-    echo "Registration successful! You can now log in.";
+    echo "Registration successful!<br>You can now <a href='login.php'>Log in</a>";
 } 
 else {
     echo "Registration failed. Please try again.";

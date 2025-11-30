@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 
-function saveNewSession($userID, $topicID, $preScore, $postScore, $jsonMessages) {
+function saveNewSession($userID, $topicID, $preScore, $postScore, $jsonMessages, $summary) {
     $db = getConnection();
 
-    $stmt = $db->prepare("INSERT INTO tutor_sessions (user_id, topic_id, pre_score, post_score, messages) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iiiis", $userID, $topicID, $preScore, $postScore, $jsonMessages);
+    $stmt = $db->prepare("INSERT INTO tutor_sessions (user_id, topic_id, pre_score, post_score, messages, summary) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iiiiss", $userID, $topicID, $preScore, $postScore, $jsonMessages, $summary);
 
     return $stmt->execute();
 }

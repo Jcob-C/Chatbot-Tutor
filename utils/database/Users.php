@@ -68,9 +68,9 @@ function checkActivated($userID) {
 
 function createUser($email, $nick, $pass) {
     $db = getConnection();
-
+    $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
     $stmt = $db->prepare("INSERT INTO users (email, nick, pass) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $email, $nick, password_hash($pass, PASSWORD_DEFAULT));
+    $stmt->bind_param("sss", $email, $nick, $hashedPassword);
 
     return $stmt->execute();
 }

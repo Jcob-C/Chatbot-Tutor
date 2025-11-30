@@ -1,15 +1,16 @@
 <?php
 require_once __DIR__ . '/../utils/CleanerFunctions.php';
 require_once __DIR__ . '/../utils/PageBlocker.php';
+require_once __DIR__ . '/../utils/database/TutorSessions.php';
 
 session_start();
 loginBlock();
-redirectIfSkippedSessionProcedure('pretest');
+redirectIfSkippedSessionProcedure('posttest');
 redirectAdmin();
 checkPost();
 
 function checkPost() {
-    if (isset($_POST['submitPretest'])) {
+    if (isset($_POST['submitPosttest'])) {
         $total = 0;
         for ($i = 1; $i <= 4; $i++) {
             $question = "q" . $i;
@@ -17,8 +18,16 @@ function checkPost() {
                 $total += intval($_POST[$question]);
             }
         }
-        $_SESSION['tutorSession']['prescore'] = $total;
-        headTo('chat.php');
+        $_SESSION['tutorSession']['postscore'] = $total;
+        saveNewSession(
+            $_SESSION['userID'], 
+            $_SESSION['tutorSession']['topicID'],
+            $_SESSION['tutorSession']['prescore'],
+            $_SESSION['tutorSession']['postscore'],
+            $_SESSION['tutorSession']['messages'],
+            $_SESSION['tutorSession']['summary']
+        );
+        headTo('conclusion.php');
     }
     clearPost();
 }
@@ -40,7 +49,7 @@ function checkPost() {
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
 
-    <title>TutorChat Pretest</title>
+    <title>TutorChat Post-test</title>
 </head>
 <body>
    <div class="container py-5">
@@ -56,7 +65,7 @@ function checkPost() {
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card shadow-lg border-0 rounded-3 bg-white">
                 <div class="card-body p-5">
-                    <h2 class="card-title fw-bold mb-4 text-center text-dark">Pretest Survey</h2>
+                    <h2 class="card-title fw-bold mb-4 text-center text-dark">Post-test Survey</h2>
 
                     <form action="" method="post">
                         <!-- Question 1 -->
@@ -168,8 +177,7 @@ function checkPost() {
                         </div>
 
                         <div class="text-center mt-5 d-flex justify-content-center gap-3">
-                            <a href="home.php" class="btn btn-secondary btn-lg fw-semibold">Cancel</a>
-                            <button type="submit" name="submitPretest" class="btn btn-brand btn-lg fw-semibold">Proceed to Chat</button>
+                            <button type="submit" name="submitPosttest" class="btn btn-brand btn-lg fw-semibold">Save Session</button>
                         </div>
                     </form>
                 </div>

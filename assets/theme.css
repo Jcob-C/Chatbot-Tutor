@@ -5,7 +5,11 @@
 }
 
 body {
+    min-height: 100vh;        
     background: linear-gradient(135deg, var(--black) 0%, var(--dark-purple) 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;       
 }
 
 .text-brand { 

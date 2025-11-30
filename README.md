@@ -4,14 +4,14 @@
 CREATE DATABASE tutorchat;
 USE tutorchat;
 
-    CREATE TABLE users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        activated BOOLEAN NOT NULL DEFAULT TRUE,
-        acc_role VARCHAR(255) NOT NULL DEFAULT 'learner',
-        email VARCHAR(255) NOT NULL UNIQUE,
-        nick VARCHAR(255) NOT NULL,
-        pass VARCHAR(255) NOT NULL
-    );
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    activated BOOLEAN NOT NULL DEFAULT TRUE,
+    acc_role VARCHAR(255) NOT NULL DEFAULT 'learner',
+    email VARCHAR(255) NOT NULL UNIQUE,
+    nick VARCHAR(255) NOT NULL,
+    pass VARCHAR(255) NOT NULL
+);
 
 CREATE TABLE verification_codes (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

@@ -1,12 +1,12 @@
 :root {
-    --primary-purple: #6f42c1;
+    --primary-purple: #9962ff;
     --dark-purple: #5a32a3;
     --black: #1a1a1a;
 }
 
 body {
     min-height: 100vh;        
-    background: linear-gradient(135deg, var(--black) 0%, var(--dark-purple) 100%);
+    background: linear-gradient(135deg,rgba(255, 255, 255, 1) 0%, rgba(164, 99, 255, 1) 50%, rgba(0, 0, 0, 1) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: cover;       

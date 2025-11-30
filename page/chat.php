@@ -20,6 +20,7 @@ redirectAdmin();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 <body>
     <input type="hidden" id="topicID" value="<?= $_SESSION['tutorSession']['topicID'] ?>">
@@ -101,7 +102,7 @@ redirectAdmin();
                 messageDiv.innerHTML = `
                     <div class="d-flex align-items-start justify-content-end">
                         <div class="rounded-3 p-3 text-white" style="background: var(--primary-purple);">
-                            <p class="mb-0">${message}</p>
+                            <p class="mb-0 fw-semibold">${message}</p>
                         </div>
                         <div class="bg-secondary bg-opacity-50 rounded-circle p-2 ms-2">
                             <i class="bi bi-person-fill text-white"></i>
@@ -115,7 +116,7 @@ redirectAdmin();
                             <i class="bi bi-robot text-white fs-5"></i>
                         </div>
                         <div class="bg-secondary bg-opacity-75 rounded-3 p-3">
-                            <p class="mb-0 text-white">${markdownToHTML(message)}</p>
+                            <p class="mb-0 text-white fw-semibold">${markdownToHTML(message)}</p>
                         </div>
                     </div>
                 `;

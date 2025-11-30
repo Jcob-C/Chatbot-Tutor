@@ -22,6 +22,11 @@ function login() {
         $_SESSION = [];
         $_SESSION['userID'] = getUserID($cleanEmail);
 
+        if (!checkActivated($_SESSION['userID'])) {
+            setNewPopupMessage("Deactivated Account!");
+            return;
+        }
+
         if (getUserRole($_SESSION['userID']) === 'admin') {
             headTo("admin/dashboard.php");
         }
@@ -50,6 +55,8 @@ function login() {
     <!-- Theme + Popup -->
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
+
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 
 <body class="d-flex align-items-center justify-content-center min-vh-100">
@@ -66,17 +73,17 @@ function login() {
             </div>
 
             <!-- Login Card -->
-            <div class="card shadow-lg border-0 rounded-3">
+            <div class="card shadow-lg border-0 rounded-3 bg-dark bg-opacity-75">
                 <div class="card-body p-4 p-md-5">
 
-                    <h2 class="card-title fw-bold text-center mb-4">Log In</h2>
+                    <h2 class="card-title fw-bold text-center mb-4 text-white">Log In</h2>
 
                     <!-- Form -->
                     <form method="post">
 
                         <!-- Email -->
                         <div class="mb-4">
-                            <label class="form-label">Email</label>
+                            <label class="form-label text-white">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-envelope-fill text-brand"></i>
@@ -87,7 +94,7 @@ function login() {
 
                         <!-- Password -->
                         <div class="mb-4">
-                            <label class="form-label">Password</label>
+                            <label class="form-label text-white">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-lock-fill text-brand"></i>

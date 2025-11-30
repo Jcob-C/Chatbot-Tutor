@@ -1,3 +1,61 @@
+<?php
+require_once '../utils/CleanerFunctions.php';
+require_once '../utils/PageBlocker.php';
+require_once '../utils/database/Users.php';
+require_once '../utils/popupmessages/back.php';
+
+session_start();
+loginBlock();
+redirectAdmin();
+checkPost();
+displayPopupMessage();
+
+function checkPost() {
+    if (isset($_POST['updateNickname'])) {
+        updateNickname($_SESSION['userID'], trim($_POST['nickname']));
+    }
+    if (isset($_POST['updatePassword'])) {
+        $oldPassword = trim($_POST['currentPassword']);
+        $password = trim($_POST['newPassword']);
+        $confirmPassword = trim($_POST['confirmNewPassword']);
+
+        if (!password_verify($oldPassword, getHashedPasswordWithID($_SESSION['userID']))) {
+            setNewPopupMessage("Incorrect Password!");
+        }
+        elseif (strlen($password) < 8) {
+            setNewPopupMessage("New password must be 8 characters or longer!");
+        }
+        elseif ($password !== $confirmPassword) {
+            setNewPopupMessage("Confirm password is not identical!");
+        }
+        elseif (updatePassword($_SESSION['userID'], $password)) {
+            setNewPopupMessage("Password Updated successfully!");
+        } 
+        else {
+            setNewPopupMessage("Password Update failed!");
+        }
+    }
+    if (isset($_POST['deactivate'])) {
+        $password = trim($_POST['password']);
+        if (password_verify($password, getHashedPasswordWithID($_SESSION['userID']))) {
+            if (deactivateUser($_SESSION['userID'])) {
+                headTo('login.php');
+            }
+            else {
+                setNewPopupMessage("Deactivation Failed!");
+            }
+        }
+        else {
+            setNewPopupMessage("Incorrect Password!");
+        }
+    }
+    if (isset($_POST['logout'])) {
+        resetSession();
+    }
+    clearPost();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +70,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="../assets/theme.css">
 <link rel="stylesheet" href="../assets/popupMessage.css">
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 <body>
 
@@ -21,7 +80,6 @@
         <h1 class="display-4 fw-bold text-white">
             <i class="bi bi-chat-dots-fill text-brand"></i> TutorChat
         </h1>
-        <p class="text-white-50">Manage your account settings</p>
     </div>
     
     <!-- Back Button -->
@@ -36,43 +94,44 @@
         
         <!-- Left Column: Profile & Password -->
         <div class="col-lg-8">
-            <div class="card shadow-lg border-0 rounded-3 mb-4">
+            <div class="card bg-dark bg-opacity-75 shadow-lg border-0 rounded-3 mb-4">
                 <div class="card-body p-4">
-                    <h2 class="card-title fw-bold mb-4">Profile Information</h2>
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Nickname</label>
-                                <input type="text" class="form-control" value="JohnDoe">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Email</label>
-                                <input type="email" class="form-control" value="johndoe@example.com" disabled>
-                            </div>
+                    <h2 class="card-title fw-bold mb-4 text-white">Profile Information</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-white">Nickname</label>
+                            <form method="post">
+                                <input type="text" name="nickname" class="form-control mb-3" value="<?= getNickname($_SESSION['userID']) ?>" required>
+                                <button type="submit" name="updateNickname" class="btn btn-brand btn-lg fw-semibold w-100"> Update Nickname </button>
+                            </form>
                         </div>
-                    </form>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-white">Email</label>
+                            <input type="email" class="form-control" value="<?= getEmail($_SESSION['userID']) ?>" disabled>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="card shadow-lg border-0 rounded-3">
+            <div class="card bg-dark bg-opacity-75 shadow-lg border-0 rounded-3">
                 <div class="card-body p-4">
-                    <h2 class="card-title fw-bold mb-4">Change Password</h2>
-                    <form>
+                    <h2 class="card-title fw-bold mb-4 text-white">Change Password</h2>
+                    <form method="post">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Current Password</label>
-                            <input type="password" class="form-control" placeholder="Enter current password">
+                            <label class="form-label fw-semibold text-white">Current Password</label>
+                            <input type="password" name="currentPassword" class="form-control" placeholder="Enter current password">
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">New Password</label>
-                                <input type="password" class="form-control" placeholder="New password">
+                                <label class="form-label fw-semibold text-white">New Password</label>
+                                <input type="password" name="newPassword" class="form-control" placeholder="New password">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Confirm Password</label>
-                                <input type="password" class="form-control" placeholder="Confirm password">
+                                <label class="form-label fw-semibold text-white">Confirm Password</label>
+                                <input type="password" name="confirmNewPassword" class="form-control" placeholder="Confirm password">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-brand btn-lg fw-semibold w-100">
+                        <button type="submit" name="updatePassword" class="btn btn-brand btn-lg fw-semibold w-100">
                             Update Password
                         </button>
                     </form>
@@ -82,36 +141,39 @@
 
         <!-- Right Column: Actions -->
         <div class="col-lg-4">
-            <div class="card shadow-lg border-0 rounded-3 mb-4">
+            <div class="card bg-dark bg-opacity-75 shadow-lg border-0 rounded-3 mb-4">
                 <div class="card-body p-4 text-center">
                     <i class="bi bi-box-arrow-right text-brand mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="h5 fw-bold mb-3">Session</h3>
-                    <button class="btn btn-outline-dark btn-lg fw-semibold w-100">
-                        Log Out
-                    </button>
+                    <form method="post">
+                        <button type="submit" name="logout" class="btn btn-outline-dark btn-lg fw-semibold w-100 text-white">
+                            Log Out
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <div class="card shadow-lg border-0 rounded-3 border-danger">
+            <div class="card bg-dark bg-opacity-75 shadow-lg border-0 rounded-3 border-danger">
                 <div class="card-body p-4 text-center">
                     <i class="bi bi-exclamation-triangle text-danger mb-3" style="font-size: 3rem;"></i>
-                    <h3 class="h5 fw-bold mb-3 text-danger">Danger Zone</h3>
-                    <form>
+                    <form method="post">
                         <div class="mb-3 text-start">
-                            <label class="form-label fw-semibold small">Confirm with password</label>
-                            <input type="password" class="form-control" placeholder="Enter password">
+                            <label class="form-label fw-semibold small text-white">Confirm with password</label>
+                            <input type="password" name="password" required class="form-control" placeholder="Enter password">
                         </div>
-                        <button type="submit" class="btn btn-danger btn-lg fw-semibold w-100" onclick="return confirm('Are you sure you want to deactivate your account? This action cannot be undone.');">
+                        <button type="submit" name="deactivate" class="btn btn-danger btn-lg fw-semibold w-100">
                             Deactivate Account
                         </button>
                     </form>
-                    <small class="text-muted d-block mt-2">This action is permanent</small>
                 </div>
             </div>
         </div>
 
     </div>
 </div>
+
+<p class="text-center small text-white-50 mt-4">
+    © <?= date('Y') ?> TutorChat. All rights reserved.
+</p>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

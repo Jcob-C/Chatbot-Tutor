@@ -42,6 +42,7 @@ function calculateImprovement($x, $y) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 <body>
     <div class="container py-5">
@@ -55,13 +56,8 @@ function calculateImprovement($x, $y) {
         <!-- Back Button -->
         <div class="mb-4">
             <a href="home.php" class="btn btn-brand btn-lg fw-semibold">
-                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                <i class="bi bi-arrow-left me-2"></i>Back
             </a>
-        </div>
-
-        <!-- Page Heading -->
-        <div class="mb-5 text-center">
-            <h1 class="display-6 fw-bold text-white">Session Overview</h1>
         </div>
 
         <!-- Main Content Row -->
@@ -138,7 +134,7 @@ function calculateImprovement($x, $y) {
                                     <div class="<?php echo $bgClass; ?> p-3 rounded-3 shadow-sm <?php echo $alignClass; ?>" style="max-width: 75%;">
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi <?php echo $icon; ?> <?php echo $iconColor; ?> me-2"></i>
-                                            <strong class="me-2"><?php echo $isUser ? 'Student' : 'TutorChat'; ?></strong>
+                                            <strong class="me-2"><?php echo $isUser ? 'You' : 'TutorChat'; ?></strong>
                                             <small class="text-white-50"><?php echo date('g:i A', strtotime($msg['timestamp'])); ?></small>
                                         </div>
                                         <p class="mb-0"><?php echo nl2br(htmlspecialchars($msg['message'])); ?></p>

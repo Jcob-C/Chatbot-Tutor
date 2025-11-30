@@ -33,7 +33,7 @@ function checkPost() {
 }
 
 function truncateText($text) {
-    $maxLength = 55;
+    $maxLength = 25;
     $text = trim($text);
 
     if (strlen($text) <= $maxLength) {
@@ -58,6 +58,7 @@ function calculateImprovement($x, $y) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 <body>
     <div class="container py-5">
@@ -267,7 +268,7 @@ function calculateImprovement($x, $y) {
     <!-- Feedback Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark border border-secondary">
+            <div class="modal-content bg-dark bg-opacity-75 border border-secondary">
                 <div class="modal-header border-secondary pb-0">
                     <h5 class="modal-title fw-bold text-brand">
                         <i class="bi bi-chat-square-text"></i> Send Feedback

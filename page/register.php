@@ -13,6 +13,7 @@
     <!-- Theme + Popup -->
     <link rel="stylesheet" href="../assets/theme.css">
     <link rel="stylesheet" href="../assets/popupMessage.css">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 
 <body class="d-flex align-items-center justify-content-center min-vh-100">
@@ -29,14 +30,14 @@
             </div>
 
             <!-- Registration Card -->
-            <div class="card shadow-lg border-0 rounded-3">
+            <div class="card shadow-lg border-0 rounded-3 bg-dark bg-opacity-75">
                 <div class="card-body p-4 p-md-5">
 
-                    <h2 class="card-title fw-bold text-center mb-4">Register</h2>
+                    <h2 class="card-title fw-bold text-center mb-4 text-white">Register</h2>
 
                     <!-- Login link -->
                     <div class="text-center mb-3">
-                        <a href="login.php" class="link-brand fw-semibold">Already have an account? Log in</a>
+                        <a href="login.php" class="link-brand fw-semibold ">Already have an account? Log in</a>
                     </div>
 
                     <!-- Form -->
@@ -44,7 +45,7 @@
 
                         <!-- Email -->
                         <div class="mb-4">
-                            <label class="form-label">Account Email</label>
+                            <label class="form-label text-white">Account Email</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-envelope-fill text-brand"></i>
@@ -55,7 +56,7 @@
 
                         <!-- Verification Code (input + send code button combined) -->
                         <div class="mb-4">
-                            <label class="form-label">Verification Code</label>
+                            <label class="form-label text-white">Verification Code</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-shield-lock-fill text-brand"></i>
@@ -73,7 +74,7 @@
 
                         <!-- Nickname -->
                         <div class="mb-4">
-                            <label class="form-label">Your Nickname</label>
+                            <label class="form-label text-white">Your Nickname</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-person-fill text-brand"></i>
@@ -84,7 +85,7 @@
 
                         <!-- Password -->
                         <div class="mb-4">
-                            <label class="form-label">Account Password</label>
+                            <label class="form-label text-white">Account Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-lock-fill text-brand"></i>
@@ -95,7 +96,7 @@
 
                         <!-- Confirm Password -->
                         <div class="mb-4">
-                            <label class="form-label">Confirm Password</label>
+                            <label class="form-label text-white">Confirm Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-lock-fill text-brand"></i>

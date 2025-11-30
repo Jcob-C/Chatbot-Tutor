@@ -52,6 +52,7 @@ function checkPost() {
     <link rel="stylesheet" href="../assets/popupMessage.css">
 
     <title>TutorChat Post-test</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
 </head>
 <body>
    <div class="container py-5">
@@ -65,115 +66,115 @@ function checkPost() {
     <!-- Centered Narrow Form Card -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card shadow-lg border-0 rounded-3 bg-white">
+            <div class="card bg-dark bg-opacity-75 shadow-lg border-0 rounded-3">
                 <div class="card-body p-5">
-                    <h2 class="card-title fw-bold mb-4 text-center text-dark"><?= htmlspecialchars(getTopicTitle($_SESSION['tutorSession']['topicID'])) ?></h2>
-                    <p class="text-center text-muted mb-4"><b> Post-Chat Survey </b></p>
+                    <h2 class="card-title fw-bold mb-4 text-center text-white"><?= htmlspecialchars(getTopicTitle($_SESSION['tutorSession']['topicID'])) ?></h2>
+                    <p class="text-center mb-4 text-white"><b> Post-Chat Survey </b></p>
                     <form action="" method="post">
                         <!-- Question 1 -->
                         <div class="mb-4">
-                            <p class="form-label fw-normal text-dark">1. I feel confident explaining the main ideas of this topic.</p>
+                            <p class="form-label fw-normal text-white">1. I feel confident explaining the main ideas of this topic.</p>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q1" value="1" id="q1-1" required>
-                                    <label class="form-check-label text-dark" for="q1-1">1</label>
+                                    <label class="form-check-label text-white" for="q1-1">1</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q1" value="2" id="q1-2">
-                                    <label class="form-check-label text-dark" for="q1-2">2</label>
+                                    <label class="form-check-label text-white" for="q1-2">2</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q1" value="3" id="q1-3">
-                                    <label class="form-check-label text-dark" for="q1-3">3</label>
+                                    <label class="form-check-label text-white" for="q1-3">3</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q1" value="4" id="q1-4">
-                                    <label class="form-check-label text-dark" for="q1-4">4</label>
+                                    <label class="form-check-label text-white" for="q1-4">4</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q1" value="5" id="q1-5">
-                                    <label class="form-check-label text-dark" for="q1-5">5</label>
+                                    <label class="form-check-label text-white" for="q1-5">5</label>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Question 2 -->
                         <div class="mb-4">
-                            <p class="form-label fw-normal text-dark">2. I understand the key terms and concepts related to this topic.</p>
+                            <p class="form-label fw-normal text-white">2. I understand the key terms and concepts related to this topic.</p>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q2" value="1" id="q2-1" required>
-                                    <label class="form-check-label text-dark" for="q2-1">1</label>
+                                    <label class="form-check-label text-white" for="q2-1">1</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q2" value="2" id="q2-2">
-                                    <label class="form-check-label text-dark" for="q2-2">2</label>
+                                    <label class="form-check-label text-white" for="q2-2">2</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q2" value="3" id="q2-3">
-                                    <label class="form-check-label text-dark" for="q2-3">3</label>
+                                    <label class="form-check-label text-white" for="q2-3">3</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q2" value="4" id="q2-4">
-                                    <label class="form-check-label text-dark" for="q2-4">4</label>
+                                    <label class="form-check-label text-white" for="q2-4">4</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q2" value="5" id="q2-5">
-                                    <label class="form-check-label text-dark" for="q2-5">5</label>
+                                    <label class="form-check-label text-white" for="q2-5">5</label>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Question 3 -->
                         <div class="mb-4">
-                            <p class="form-label fw-normal text-dark">3. I could apply the knowledge from this topic in practice.</p>
+                            <p class="form-label fw-normal text-white">3. I could apply the knowledge from this topic in practice.</p>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q3" value="1" id="q3-1" required>
-                                    <label class="form-check-label text-dark" for="q3-1">1</label>
+                                    <label class="form-check-label text-white" for="q3-1">1</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q3" value="2" id="q3-2">
-                                    <label class="form-check-label text-dark" for="q3-2">2</label>
+                                    <label class="form-check-label text-white" for="q3-2">2</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q3" value="3" id="q3-3">
-                                    <label class="form-check-label text-dark" for="q3-3">3</label>
+                                    <label class="form-check-label text-white" for="q3-3">3</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q3" value="4" id="q3-4">
-                                    <label class="form-check-label text-dark" for="q3-4">4</label>
+                                    <label class="form-check-label text-white" for="q3-4">4</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q3" value="5" id="q3-5">
-                                    <label class="form-check-label text-dark" for="q3-5">5</label>
+                                    <label class="form-check-label text-white" for="q3-5">5</label>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Question 4 -->
                         <div class="mb-4">
-                            <p class="form-label fw-normal text-dark">4. I am motivated to learn more about this topic.</p>
+                            <p class="form-label fw-normal text-white">4. I am motivated to learn more about this topic.</p>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q4" value="1" id="q4-1" required>
-                                    <label class="form-check-label text-dark" for="q4-1">1</label>
+                                    <label class="form-check-label text-white" for="q4-1">1</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q4" value="2" id="q4-2">
-                                    <label class="form-check-label text-dark" for="q4-2">2</label>
+                                    <label class="form-check-label text-white" for="q4-2">2</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q4" value="3" id="q4-3">
-                                    <label class="form-check-label text-dark" for="q4-3">3</label>
+                                    <label class="form-check-label text-white" for="q4-3">3</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q4" value="4" id="q4-4">
-                                    <label class="form-check-label text-dark" for="q4-4">4</label>
+                                    <label class="form-check-label text-white" for="q4-4">4</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="q4" value="5" id="q4-5">
-                                    <label class="form-check-label text-dark" for="q4-5">5</label>
+                                    <label class="form-check-label text-white" for="q4-5">5</label>
                                 </div>
                             </div>
                         </div>

@@ -43,7 +43,7 @@ redirectAdmin();
             <div class="col-12">
                 <div class="bg-dark bg-opacity-75 border border-secondary rounded-3 p-3 shadow">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h2 id="topicTitle" class="h4 fw-bold mb-0 text-brand"><?= getTopicTitle($_SESSION['tutorSession']['topicID']) ?></h2>
+                        <h2 id="topicTitle" class="h4 fw-bold mb-0 text-brand white-text"><?= getTopicTitle($_SESSION['tutorSession']['topicID']) ?></h2>
                         <a id="saveSessionBtn" class="btn btn-outline-light btn-sm">
                             <i class="bi bi-box-arrow-right"></i> Save Session
                         </a>
@@ -177,6 +177,44 @@ redirectAdmin();
             canSend = true; // unlock sending
         }
 
+        async function sendMessageSilentUI(message) {
+            if (!message || !canSend) return;
+
+            canSend = false;
+
+            // Prepare payload for backend
+            const payload = {
+                chatHistory: chatHistory,
+                newMessage: message,
+                topicTitle: topicTitle,
+                topicID: topicID
+            };
+
+            try {
+                const response = await fetch('../api/Responder.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const result = await response.text();
+
+                // Add AI response to UI without touching the input
+                addChatMessage(result, false);
+            } catch (error) {
+                console.error("Error contacting backend:", error);
+                addChatMessage("Failed to get response. Please try again.", false);
+            } finally {
+                canSend = true;
+            }
+        }
+
         function markdownToHTML(md) {
             return md
                 .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
@@ -226,6 +264,8 @@ redirectAdmin();
                 displayPopupMessage("Please try again.");
             });
         });
+
+        sendMessageSilentUI("(Do not acknowledge this message, this is for you to start the conversation.)")
     </script>
 </body>
 </html>

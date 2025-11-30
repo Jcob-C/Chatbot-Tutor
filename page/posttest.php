@@ -20,17 +20,16 @@ function checkPost() {
             }
         }
         $_SESSION['tutorSession']['postscore'] = $total;
-        saveNewSession(
+        $sessionID = saveNewSession(
             $_SESSION['userID'], 
             $_SESSION['tutorSession']['topicID'],
             $_SESSION['tutorSession']['prescore'],
             $_SESSION['tutorSession']['postscore'],
-            $_SESSION['tutorSession']['messages'],
-            $_SESSION['tutorSession']['summary']
+            $_SESSION['tutorSession']['messages']
         );
         addTopicClick($_SESSION['tutorSession']['topicID']);
         unset($_SESSION['tutorSession']);
-        headTo('session.php');
+        headTo('session.php?id=' . $sessionID);
     }
     clearPost();
 }
@@ -68,8 +67,8 @@ function checkPost() {
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card shadow-lg border-0 rounded-3 bg-white">
                 <div class="card-body p-5">
-                    <h2 class="card-title fw-bold mb-4 text-center text-dark">Post-test Survey</h2>
-
+                    <h2 class="card-title fw-bold mb-4 text-center text-dark"><?= htmlspecialchars(getTopicTitle($_SESSION['tutorSession']['topicID'])) ?></h2>
+                    <p class="text-center text-muted mb-4"><b> Post-Chat Survey </b></p>
                     <form action="" method="post">
                         <!-- Question 1 -->
                         <div class="mb-4">
@@ -189,7 +188,7 @@ function checkPost() {
     </div>
 
     <div class="text-center mt-4">
-        <small class="text-white-50">© <?= date('Y'); ?> TutorChat - Your AI Learning Companion</small>
+        <small class="text-white-50">© <?= date('Y') ?> TutorChat. All rights reserved.</small>
     </div>
 </div>
 

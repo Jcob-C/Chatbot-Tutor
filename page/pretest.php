@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../utils/CleanerFunctions.php';
 require_once __DIR__ . '/../utils/PageBlocker.php';
+require_once __DIR__ . '/../utils/database/Topics.php';
 
 session_start();
 loginBlock();
@@ -56,8 +57,8 @@ function checkPost() {
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card shadow-lg border-0 rounded-3 bg-white">
                 <div class="card-body p-5">
-                    <h2 class="card-title fw-bold mb-4 text-center text-dark">Pretest Survey</h2>
-
+                    <h2 class="card-title fw-bold mb-4 text-center text-dark"><?= htmlspecialchars(getTopicTitle($_SESSION['tutorSession']['topicID'])) ?></h2>
+                    <p class="text-center text-muted mb-4"><b> Pre-Chat Survey </b></p>
                     <form action="" method="post">
                         <!-- Question 1 -->
                         <div class="mb-4">
@@ -178,7 +179,7 @@ function checkPost() {
     </div>
 
     <div class="text-center mt-4">
-        <small class="text-white-50">© <?= date('Y'); ?> TutorChat - Your AI Learning Companion</small>
+        <small class="text-white-50">© <?= date('Y') ?> TutorChat. All rights reserved.</small>
     </div>
 </div>
 

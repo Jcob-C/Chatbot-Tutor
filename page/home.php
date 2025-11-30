@@ -16,7 +16,7 @@ $sessionsPage = isset($_GET['sessions_page']) ? (int)$_GET['sessions_page'] : 1;
 $topicsPage = isset($_GET['topics_page']) ? (int)$_GET['topics_page'] : 1;
 $sessionsData = getLatestUserSessions($_SESSION['userID'], $limit, $sessionsPage);
 $topicsData = getTopics($limit, $topicsPage);
-$nickname = getNickname($_SESSION['userID']);
+$nickname = getNickname($_SESSION['userID']) ?? "User";
 
 function checkPost() {
     if (isset($_POST['logout'])) {
@@ -26,7 +26,25 @@ function checkPost() {
     if (isset($_POST['startSession'])) {
         startNewSession($_POST['startSession']);
     }
+    if (isset($_POST['viewSession'])) {
+        headTo('session.php?id=' . $_POST['viewSession']);
+    }
     clearPost();
+}
+
+function truncateText($text) {
+    $maxLength = 55;
+    $text = trim($text);
+
+    if (strlen($text) <= $maxLength) {
+        return $text;
+    }
+
+    return substr($text, 0, $maxLength) . '...';
+}
+
+function calculateImprovement($x, $y) {
+    return (int) ((($y - $x) / $x) * 100);
 }
 ?>
 
@@ -57,15 +75,15 @@ function checkPost() {
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <h2 class="card-title fw-bold mb-2 text-white">Welcome back, 
-                                    <a href="settings.php" class="link-brand fw-semibold text-decoration-none">
-                                        <?php echo htmlspecialchars($nickname); ?>
+                                <h2 class="card-title fw-bold mb-2 text-white">Hello, 
+                                    <a href="settings.php" class="link-brand fw-bold text-decoration-none">
+                                        <?php echo htmlspecialchars($nickname) . '!'; ?>
                                     </a>
                                 </h2>
                             </div>
                             <div class="mt-3 mt-md-0">
                                 <button type="button" class="btn btn-brand btn-lg fw-semibold" onclick="showFeedbackForm()">
-                                    <i class="bi bi-chat-square-text"></i> Feedback
+                                    <i class="bi bi-chat-square-text"></i>
                                 </button>
                             </div>
                         </div>
@@ -99,7 +117,7 @@ function checkPost() {
                                                 <div class="d-flex justify-content-between align-items-start">
                                                     <div class="flex-grow-1">
                                                         <h5 class="fw-bold text-white mb-2"><?php echo htmlspecialchars($topic['title']); ?></h5>
-                                                        <p class="text-white-50 mb-2 small"><?php echo htmlspecialchars($topic['descr']); ?></p>
+                                                        <p class="text-white-50 mb-2 small"><?php echo htmlspecialchars(truncateText($topic['descr'])); ?></p>
                                                         <small class="text-white-50">
                                                             <i class="bi bi-people"></i> <?php echo $topic['clicks']; ?> sessions completed
                                                         </small>
@@ -186,17 +204,19 @@ function checkPost() {
                                                             </span>
                                                             <span class="text-white-50 small">
                                                                 Improvement: <span class="fw-bold <?php echo $improvementClass; ?>">
-                                                                    <?php echo $improvement > 0 ? '+' : ''; ?><?php echo $improvement * 5; ?>%
+                                                                    <?php echo $improvement > 0 ? '+' : ''; ?><?php echo calculateImprovement($session['pre_score'],$session['post_score']); ?>%
                                                                 </span>
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-sm btn-outline-light" onclick="viewSession(<?php echo $session['id']; ?>)">
-                                                            <i class="bi bi-eye"></i> View
-                                                        </button>
                                                         <form method="post">
-                                                            <button type="submit" name="startSession" value="<?= $session['topic_id'] ?>" class="btn btn-sm btn-brand" onclick="redoSession(<?php echo $session['topic_id']; ?>)">
+                                                            <button type="submit" name="viewSession" value="<?= $session['id'] ?>" class="btn btn-sm btn-outline-light">
+                                                                <i class="bi bi-eye"></i> View
+                                                            </button>
+                                                        </form>
+                                                        <form method="post">
+                                                            <button type="submit" name="startSession" value="<?= $session['topic_id'] ?>" class="btn btn-sm btn-brand">
                                                                 <i class="bi bi-arrow-repeat"></i> Start New
                                                             </button>
                                                         </form>
@@ -240,7 +260,7 @@ function checkPost() {
 
         <!-- Footer -->
         <div class="text-center mt-5">
-            <small class="text-white-50">© <?= date('Y'); ?> TutorChat — Your AI Learning Companion</small>
+            <small class="text-white-50">© <?= date('Y') ?> TutorChat. All rights reserved.</small>
         </div>
     </div>
 
@@ -292,16 +312,31 @@ function checkPost() {
 
         function submitFeedback(event) {
             event.preventDefault();
-            
+
             const title = document.getElementById('feedbackTitle').value;
             const description = document.getElementById('feedbackDescription').value;
-            
-            // TODO: Replace with actual AJAX call to submit feedback
-            
-            feedbackModal.hide();
-            displayPopupMessage('Thank you for your feedback! We appreciate your input.');
-            document.getElementById('feedbackForm').reset();
-            
+
+            // Prepare data to send
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+
+            // Send AJAX request
+            fetch('../api/Feedback.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text()) // <-- use text() instead of json()
+            .then(message => {
+                feedbackModal.hide();
+                displayPopupMessage(message);
+                document.getElementById('feedbackForm').reset();
+            })
+            .catch(error => {
+                console.error('Error submitting feedback:', error);
+                displayPopupMessage('An error occurred while submitting feedback.');
+            });
+
             return false;
         }
 
@@ -311,6 +346,19 @@ function checkPost() {
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Save scroll position before leaving the page
+        window.addEventListener("beforeunload", () => {
+            localStorage.setItem("scrollPos", window.scrollY);
+        });
+
+        // Restore scroll position when the page loads
+        window.addEventListener("load", () => {
+            const scrollPos = localStorage.getItem("scrollPos");
+            if (scrollPos !== null) {
+                window.scrollTo(0, parseInt(scrollPos));
+            }
+        });
     </script>
 </body>
 </html>

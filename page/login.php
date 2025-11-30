@@ -114,7 +114,7 @@ function login() {
             </div>
 
             <p class="text-center small text-white-50 mt-4">
-                © <?= date('Y'); ?> TutorChat — Your AI Learning Companion
+                © <?= date('Y') ?> TutorChat. All rights reserved.
             </p>
 
         </div>

@@ -1,14 +1,31 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 
-function saveNewSession($userID, $topicID, $preScore, $postScore, $messages, $summary) {
+function saveNewSession($userID, $topicID, $preScore, $postScore, $messages) {
     $db = getConnection();
     $jsonMessages = json_encode($messages);
 
-    $stmt = $db->prepare("INSERT INTO tutor_sessions (user_id, topic_id, pre_score, post_score, messages, summary) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("iiiiss", $userID, $topicID, $preScore, $postScore, $jsonMessages, $summary);
+    $stmt = $db->prepare("INSERT INTO tutor_sessions (user_id, topic_id, pre_score, post_score, messages) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("iiiis", $userID, $topicID, $preScore, $postScore, $jsonMessages);
 
-    return $stmt->execute();
+    if ($stmt->execute()) {
+        return $db->insert_id;
+    } else {
+        return 0;
+    }
+}
+
+function getSession($id) {
+    $db = getConnection();
+
+    $stmt = $db->prepare("SELECT * FROM tutor_sessions WHERE id = ?");
+    $stmt->bind_param("i", $id);
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $resultArray = $result->fetch_all(MYSQLI_ASSOC);
+
+    return $resultArray;
 }
 
 function getLatestUserSessions($userID, $limit, $page) {

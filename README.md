@@ -43,7 +43,6 @@ CREATE TABLE tutor_sessions (
     pre_score INT NOT NULL,
     post_score INT NOT NULL,
     messages JSON NOT NULL,
-    summary TEXT NOT NULL,
     concluded DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE

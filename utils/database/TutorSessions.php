@@ -15,17 +15,42 @@ function getLatestUserSessions($userID, $limit, $page) {
     $db = getConnection();
 
     $offset = ($page - 1) * $limit;
-    $stmt = $db->prepare("SELECT * FROM tutor_sessions WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?");
+    
+    // Get sessions with topic title using JOIN
+    $stmt = $db->prepare("
+        SELECT 
+            tutor_sessions.*, 
+            topics.title as topic_title 
+        FROM tutor_sessions 
+        JOIN topics ON tutor_sessions.topic_id = topics.id 
+        WHERE tutor_sessions.user_id = ? 
+        ORDER BY tutor_sessions.id DESC 
+        LIMIT ? OFFSET ?
+    ");
     $stmt->bind_param("iii", $userID, $limit, $offset);
-
     $stmt->execute();
     $result = $stmt->get_result();
-    $resultArray = $result->fetch_all(MYSQLI_ASSOC);
-
-    return $resultArray;
+    $sessions = $result->fetch_all(MYSQLI_ASSOC);
+    
+    // Get total count for this user
+    $countStmt = $db->prepare("SELECT COUNT(*) as total FROM tutor_sessions WHERE user_id = ?");
+    $countStmt->bind_param("i", $userID);
+    $countStmt->execute();
+    $countResult = $countStmt->get_result();
+    $totalCount = $countResult->fetch_assoc()['total'];
+    
+    // Calculate pagination flags
+    $has_prev = $page > 1;
+    $has_next = ($offset + $limit) < $totalCount;
+    
+    return [
+        'sessions' => $sessions,
+        'has_prev' => $has_prev,
+        'has_next' => $has_next,
+        'page' => $page
+    ];
 }
 
-// returns topic ids that user had a session with but still lacks confidence or understanding on
 function getPreviousTopicIDsSortedByPostScore($userID, $limit, $page) {
     $db = getConnection();
     $offset = ($page - 1) * $limit;
@@ -56,5 +81,4 @@ function getPreviousTopicIDsSortedByPostScore($userID, $limit, $page) {
 
     return $topicIDs;
 }
-
 ?>

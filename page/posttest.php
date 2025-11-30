@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../utils/CleanerFunctions.php';
 require_once __DIR__ . '/../utils/PageBlocker.php';
+require_once __DIR__ . '/../utils/database/Topics.php';
 require_once __DIR__ . '/../utils/database/TutorSessions.php';
 
 session_start();
@@ -27,8 +28,9 @@ function checkPost() {
             $_SESSION['tutorSession']['messages'],
             $_SESSION['tutorSession']['summary']
         );
+        addTopicClick($_SESSION['tutorSession']['topicID']);
         unset($_SESSION['tutorSession']);
-        headTo('conclusion.php');
+        headTo('session.php');
     }
     clearPost();
 }

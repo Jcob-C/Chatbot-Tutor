@@ -2,7 +2,7 @@
 const host = "localhost";
 const user = "root";
 const pass = "";
-const db = "chatbot_tutor";
+const db = "tutorchat";
 
 function getConnection() {
     return new mysqli(host, user, pass, db);

@@ -11,13 +11,13 @@ function loginBlock() {
 
 function redirectAdmin() {
     if (getUserRole($_SESSION['userID']) === 'admin') {
-        headTo('../page/admin.php');
+        headTo('../page/admin/dashboard.php');
     }
 }
 
 function redirectLearner() {
     if (getUserRole($_SESSION['userID']) === 'learner') {
-        headTo('../page/home.php');
+        headTo('../../page/home.php');
     }
 }
 

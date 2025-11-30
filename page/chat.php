@@ -22,6 +22,8 @@ redirectAdmin();
     <link rel="stylesheet" href="../assets/popupMessage.css">
 </head>
 <body>
+    <input type="hidden" id="topicID" value="<?= $_SESSION['tutorSession']['topicID'] ?>">
+
     <div class="container-fluid d-flex flex-column p-3" style="height: 100vh; max-height: 100vh; overflow: hidden;">
         <!-- Header Section -->
         <div class="row mb-3">
@@ -79,6 +81,7 @@ redirectAdmin();
         const chatContainer = document.getElementById('chatContainer');
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.querySelector('button');
+        const topicID = document.getElementById("topicID").value;
         const topicTitle = document.getElementById("topicTitle").innerText.trim();
 
         const chatHistory = [];
@@ -143,7 +146,8 @@ redirectAdmin();
             const payload = {
                 chatHistory: chatHistory,
                 newMessage: message,
-                topicTitle: topicTitle
+                topicTitle: topicTitle,
+                topicID: topicID
             };
 
             try {

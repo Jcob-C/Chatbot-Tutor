@@ -23,7 +23,7 @@ function login() {
         $_SESSION['userID'] = getUserID($cleanEmail);
 
         if (getUserRole($_SESSION['userID']) === 'admin') {
-            headTo("admin.php");
+            headTo("admin/dashboard.php");
         }
         else {
             headTo("home.php");

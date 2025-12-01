@@ -1,8 +1,9 @@
 <?php
-require_once '../utils/CleanerFunctions.php';
-require_once '../utils/popupmessages/back.php';
-require_once '../utils/database/Users.php';
+require_once __DIR__ . '/../utils/popupmessage/.php';
+require_once __DIR__ . '/../database/Users.php';
+require_once __DIR__ . '/../config/db.php';
 
+$conn = new mysqli(host, user, pass, db);
 session_start();
 checkPost();
 displayPopupMessage();
@@ -10,32 +11,34 @@ displayPopupMessage();
 function checkPost() {
     if (isset($_POST['login'])) {
         login();
+        header("Location: ".$_SERVER['PHP_SELF']); exit;
     }
-    clearPost();
 }
 
 function login() {
+    global $conn;
     $cleanEmail = trim($_POST['email']);
     $cleanPassword = trim($_POST['password']);
+    $_SESSION['loginEmailInput'] = $cleanEmail;
 
-    if (password_verify($cleanPassword, getHashedPassword($cleanEmail))) {
+    if (password_verify($cleanPassword, getHashedPasswordByEmail($conn, $cleanEmail))) {
         $_SESSION = [];
-        $_SESSION['userID'] = getUserID($cleanEmail);
+        $_SESSION['loggedinUserID'] = getUserID($conn, $cleanEmail);
+        $_SESSION['loggedinUserRole'] = getUserRole($conn, $_SESSION['loggedinUserID']);
 
-        if (!checkActivated($_SESSION['userID'])) {
-            setNewPopupMessage("Deactivated Account!");
+        if (!checkActivated($conn, $_SESSION['loggedinUserID'])) {
+            setPopupMessage("Deactivated Account");
             return;
         }
-
-        if (getUserRole($_SESSION['userID']) === 'admin') {
-            headTo("admin/dashboard.php");
+        if ($_SESSION['loggedinUserRole'] === 'admin') {
+            header("Location: admin.php"); exit;
         }
         else {
-            headTo("home.php");
+            header("Location: home.php"); exit;
         }
     }
     else {
-        setNewPopupMessage("Invalid Login!");
+        setPopupMessage("Invalid Login");
     }
 }
 ?>
@@ -45,92 +48,58 @@ function login() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Bootstrap 5 -->
+    <title>TutorChat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    <!-- Theme + Popup -->
-    <link rel="stylesheet" href="../assets/theme.css">
-    <link rel="stylesheet" href="../assets/popupMessage.css">
-
-    <link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/Style.css">
+    <link rel="stylesheet" href="../assets/PopupMessage.css">
 </head>
-
-<body class="d-flex align-items-center justify-content-center min-vh-100">
-
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-5">
-
-            <!-- Branding -->
-            <div class="text-center mb-4">
-                <h1 class="display-4 fw-bold text-white">
-                    <i class="bi bi-chat-dots-fill text-brand"></i> TutorChat
-                </h1>
-            </div>
-
-            <!-- Login Card -->
-            <div class="card shadow-lg border-0 rounded-3 bg-dark bg-opacity-75">
-                <div class="card-body p-4 p-md-5">
-
-                    <h2 class="card-title fw-bold text-center mb-4 text-white">Log In</h2>
-
-                    <!-- Form -->
-                    <form method="post">
-
-                        <!-- Email -->
-                        <div class="mb-4">
-                            <label class="form-label text-white">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white">
-                                    <i class="bi bi-envelope-fill text-brand"></i>
-                                </span>
-                                <input type="text" class="form-control" placeholder="Enter your email" name="email" required>
-                            </div>
-                        </div>
-
-                        <!-- Password -->
-                        <div class="mb-4">
-                            <label class="form-label text-white">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white">
-                                    <i class="bi bi-lock-fill text-brand"></i>
-                                </span>
-                                <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
-                            </div>
-                        </div>
-
-                        <!-- Login Button -->
-                        <div class="d-grid">
-                            <button type="submit" name="login" class="btn btn-brand btn-lg fw-semibold">
-                                Log In
-                            </button>
-                        </div>
-
-                    </form>
-
-                    <!-- Register link -->
-                    <div class="text-center mt-4">
-                        <a href="register.php" class="link-brand fw-semibold">Don't have an account? Register</a>
-                    </div>
-
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row min-vh-100 justify-content-center">
+            <div class="col-12 col-md-8 col-lg-9 d-flex justify-content-center align-items-center bg-light order-1 order-md-1 mb-4 mb-md-0">
+                <div class="text-center px-4">
+                    <br>
+                    <h1>Welcome to <i class="bi bi-chat-dots-fill icon-primary"></i> TutorChat</h1>
+                    <p class="lead">Your personal tutoring assistant, available 24/7.</p>
                 </div>
             </div>
-
-            <p class="text-center small text-white-50 mt-4">
-                © <?= date('Y') ?> TutorChat. All rights reserved.
-            </p>
-
+            <div class="col-12 col-md-4 col-lg-3 bg-white shadow d-flex flex-column justify-content-center p-4 order-2 order-md-2">
+                <h2 class="mb-4 d-flex align-items-center gap-2 justify-content-center">Log In</h2>
+                <form method="post">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="mb-3">
+                        <input name="email" type="text" id="email" class="form-control" placeholder="Enter your email" 
+                            value="<?= isset($_SESSION['loginEmailInput']) ? $_SESSION['loginEmailInput'] : '' ?>" required
+                        >
+                    </div>
+                    <label for="password" class="form-label">Password</label>
+                    <div class="mb-3 position-relative d-flex align-items-center">
+                        <input name="password" type="password" id="password" class="form-control me-2" placeholder="Enter your password" required>
+                        <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                            <i class="bi bi-eye-fill"></i>
+                        </button>
+                    </div>
+                    <br>
+                    <button name="login" type="submit" class="btn btn-primary w-100">Log In</button>
+                </form>
+                <p class="mt-3 text-center">
+                    Don't have an account? 
+                    <a href="register.php" class="fw-bold">Register</a>
+                </p>
+            </div>
         </div>
     </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script> 
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
 
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+        togglePassword.addEventListener('click', () => {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            togglePassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+        });
+    </script>
 </body>
 </html>

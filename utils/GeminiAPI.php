@@ -23,7 +23,6 @@ function generateText($input) {
     if (curl_errno($ch)) {
         echo "Curl error: " . curl_error($ch);
     }
-    curl_close($ch);
 
     return json_decode($response, true)['candidates'][0]['content']['parts'][0]['text'];
 }

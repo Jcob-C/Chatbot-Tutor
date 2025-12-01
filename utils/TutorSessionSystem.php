@@ -1,9 +1,7 @@
 <?php
-require_once 'database/TutorSessions.php';
-
 function startNewSession($topicID) {
-    $_SESSION['tutorSession'] = [];
-    $_SESSION['tutorSession']['topicID'] = $topicID;
-    headTo('pretest.php');
+    $_SESSION['ongoingTutorSession'] = [];
+    $_SESSION['ongoingTutorSession']['topicID'] = $topicID;
+    header("Location: ../page/chat.php"); exit;
 }
 ?>

@@ -1,6 +1,8 @@
 <?php
-require_once '../utils/database/Feedbacks.php';
+require_once __DIR__ . '/../database/Feedbacks.php';
+
 session_start();
+$conn = new mysqli(host, user, pass, db);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (createFeedback($userid, $title, $description)) {
+    if (createFeedback($conn, $userid, $title, $description)) {
         echo "Thank you for your feedback!";
     } else {
         echo "Failed to submit feedback.";

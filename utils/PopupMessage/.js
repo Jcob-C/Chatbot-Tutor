@@ -9,8 +9,8 @@ function displayPopupMessage(message) {
 
     // Insert popup content
     popup.innerHTML = `
-        <button id="closePopup">X</button>
         <span>${message}</span>
+        <button id="closePopup">OK</button>
     `;
 
     // Append to page

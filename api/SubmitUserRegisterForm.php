@@ -1,24 +1,26 @@
 <?php
-require_once '../utils/database/Users.php';
-require_once '../utils/database/VerificationCodes.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../database/Users.php';
+require_once __DIR__ . '/../database/VerificationCodes.php';
 
 $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $nickname = isset($_POST['nickname']) ? trim($_POST['nickname']) : '';
 $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-$code = isset($_POST['code']) ? trim($_POST['code']) : '';
+$code = isset($_POST['verificationCode']) ? trim($_POST['verificationCode']) : '';
+$conn = new mysqli(host, user, pass, db);
 
 if (empty($email) || empty($nickname) || empty($password) || empty($code)) {
     echo "All fields are required.";
     exit;
 }
 
-$userID = getUserID($email);
+$userID = getUserID($conn, $email);
 if ($userID) {
     echo "Email is already registered.";
     exit;
 }
 
-$storedCode = getVerificationCode($email);
+$storedCode = getVerificationCode($conn, $email);
 if (!$storedCode) {
     echo "No valid verification code found or it has expired.";
     exit;
@@ -29,7 +31,8 @@ if ($storedCode != $code) {
     exit;
 }
 
-if (createUser($email, $nickname, $password)) {
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+if (createUser($conn, $email, $nickname, $hashedPassword)) {
     echo "Registration successful!<br>You can now <a href='login.php'>Log in</a>";
 } 
 else {

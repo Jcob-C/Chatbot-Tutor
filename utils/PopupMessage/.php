@@ -1,5 +1,5 @@
 <?php
-function setNewPopupMessage($message) {
+function setPopupMessage($message) {
     $_SESSION['popupMessage'] = $message;
 }
 
@@ -7,8 +7,8 @@ function displayPopupMessage() {
     if (isset($_SESSION['popupMessage'])) {
         echo '
         <div id="popupMessage"> 
-            <button id="closePopup">X</button> 
-            <span>' . $_SESSION['popupMessage'] . '</span> 
+            <span>' . $_SESSION['popupMessage'] . '</span>
+            <button id="closePopup">OK</button> 
         </div>
         <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -17,7 +17,7 @@ function displayPopupMessage() {
                 closeBtn.addEventListener("click", function() {
                     var popup = document.getElementById("popupMessage");
                     if (popup) {
-                        popup.style.display = "none";
+                        popup.remove();
                     }
                 });
             }

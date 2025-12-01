@@ -1,95 +1,53 @@
-/* TutorChat Popup Message Styles */
-
+/* Popup container - centered and responsive */
 #popupMessage {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #ffffff;
-    padding: 2rem 2.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 1rem 3rem rgb(0, 0, 0, 0.4);
+    background-color: #ffffff;
+    border: 1px solid #4a90e2;
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
     z-index: 9999;
-    min-width: 320px;
-    max-width: 500px;
-    border: 2px solid #8b5cf6;
-    animation: popupSlideIn 0.3s ease-out;
-    overflow: hidden;
-}
-
-#popupMessage::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgb(255, 255, 255);
-    backdrop-filter: blur(4px);
-    z-index: -1;
-}
-
-#popupMessage span {
-    display: block;
-    color: #000000;
+    display: flex;
+    flex-direction: column; /* stack message and button vertically */
+    align-items: center;
+    gap: 1rem; /* space between message and button */
     font-size: 1rem;
-    font-weight: bold;
-    line-height: 1.6;
-    margin-right: 1rem;
+    min-width: 250px;
+    max-width: 90vw; /* restrict width to viewport */
     text-align: center;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word; /* force long words to break */
+    white-space: normal;
 }
 
-#closePopup {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #8b5cf6;
+/* Popup message text */
+#popupMessage span {
+    color: #333333;
+    font-weight: 500;
+    display: block;
+    max-width: 100%;
+    word-break: break-word; /* crucial for single long words */
+    overflow-wrap: anywhere; /* modern fallback for breaking anywhere */
+    white-space: normal;
+}
+
+/* Close button styling */
+#popupMessage #closePopup {
+    background-color: #4a90e2;
     color: #ffffff;
     border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 1rem;
-    font-weight: bold;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
 }
 
-#closePopup:hover {
-    background: #7c3aed;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5);
-}
-
-#closePopup:active {
-    transform: scale(0.95);
-}
-
-/* Slide in animation */
-@keyframes popupSlideIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 576px) {
-    #popupMessage {
-        min-width: 280px;
-        max-width: calc(100% - 2rem);
-        padding: 1.5rem 2rem;
-    }
-    
-    #popupMessage span {
-        font-size: 0.95rem;
-    }
+#popupMessage #closePopup:hover {
+    background-color: #357ab7;
 }

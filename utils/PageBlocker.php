@@ -1,37 +1,23 @@
 <?php
-require_once 'CleanerFunctions.php';
-require_once 'database/Users.php';
+require_once __DIR__ . '/../database/Users.php';
 
-function loginBlock() {
-    if (!isset($_SESSION['userID']) || false == checkActivated($_SESSION['userID'])) {
-        resetSession();
-        headTo('../page/login.php');
+function redirectUnauthorized($conn) {
+    if (!isset($_SESSION['loggedinUserID']) || false == checkActivated($conn, $_SESSION['loggedinUserID'])) {
+        $_SESSION = [];
+        session_destroy();
+        header('Location: ../page/login.php'); exit;
     }
 }
 
-function redirectAdmin() {
-    if (getUserRole($_SESSION['userID']) === 'admin') {
-        headTo('../page/admin/dashboard.php');
+function redirectAdmin($conn) {
+    if ($_SESSION['loggedinUserRole'] === 'admin') {
+        header('Location: ../page/admin.php'); exit;
     }
 }
 
-function redirectLearner() {
-    if (getUserRole($_SESSION['userID']) === 'learner') {
-        headTo('../../page/home.php');
-    }
-}
-
-function redirectIfSkippedSessionProcedure($page) {
-    $topicSet = isset($_SESSION['tutorSession']['topicID']);
-    $prescoreSet = isset($_SESSION['tutorSession']['prescore']);
-    $messagesSet = isset($_SESSION['tutorSession']['messages']);
-    $postscoreSet = isset($_SESSION['tutorSession']['postscore']);
-
-    if ((!$topicSet && $page === 'pretest') 
-    || ((!$topicSet || !$prescoreSet) && $page === 'chat') 
-    || ((!$topicSet || !$prescoreSet || !$messagesSet) && $page === 'posttest')) {
-        unset($_SESSION['tutorSession']);
-        headTo('../page/home.php');
+function redirectLearner($conn) {
+    if ($_SESSION['loggedinUserRole'] === 'learner') {
+        header('Location: ../page/home.php'); exit;
     }
 }
 ?>

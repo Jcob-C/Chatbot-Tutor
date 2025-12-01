@@ -1,8 +1,7 @@
 <?php
-require_once __DIR__ . '/../utils/CleanerFunctions.php';
 require_once __DIR__ . '/../utils/PageBlocker.php';
-require_once __DIR__ . '/../utils/database/Topics.php';
-require_once __DIR__ . '/../utils/popupmessages/back.php';
+require_once __DIR__ . '/../database/Topics.php';
+require_once __DIR__ . '/../utils/PopupMessage/.php';
 
 session_start();
 loginBlock();

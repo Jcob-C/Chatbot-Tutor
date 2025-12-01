@@ -2,12 +2,15 @@
 require __DIR__ . '/../lib/PHPMailer-7.0.1/src/Exception.php';
 require __DIR__ . '/../lib/PHPMailer-7.0.1/src/PHPMailer.php';
 require __DIR__ . '/../lib/PHPMailer-7.0.1/src/SMTP.php';
-require_once __DIR__ . '/../utils/database/VerificationCodes.php'; 
-require_once __DIR__ . '/../utils/database/Users.php'; 
+require_once __DIR__ . '/../database/VerificationCodes.php'; 
+require_once __DIR__ . '/../database/Users.php'; 
 require_once __DIR__ . '/../config/mail.php'; 
+require_once __DIR__ . '/../config/db.php'; 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+$conn = new mysqli(host, user, pass, db);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo "Invalid request method!";
@@ -21,15 +24,15 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-if (getUserID($email)) {
+if (getUserID($conn, $email)) {
     echo "Email is already registered.";
     exit;
 }
 
 $verificationCode = rand(100000, 999999);
 
-if (!saveVerificationCode($email, $verificationCode)) {
-    echo "Failed to save verification code. Please try again.";
+if (!registerVerificationCode($conn, $email, $verificationCode)) {
+    echo "Failed to register the verification code. Please try again.";
     exit;
 }
 
@@ -46,12 +49,12 @@ try {
     $mail->Port = 587;
 
     // Recipients
-    $mail->setFrom(email, 'Chatbot-Tutor');
+    $mail->setFrom(email, 'TutorChat');
     $mail->addAddress($email);
 
     // Content
     $mail->isHTML(true);
-    $mail->Subject = 'Your Verification Code';
+    $mail->Subject = 'TutorChat Verification Code';
     $mail->Body    = "Your verification code is <b>{$verificationCode}</b> and it expires in <b>5 minutes</b>.";
 
     // Send email

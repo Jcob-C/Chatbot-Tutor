@@ -8,6 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/Style.css">
     <link rel="stylesheet" href="../assets/PopupMessage.css">
+    <style>
+        .sidebar-scroll {
+            max-height: 100vh;  
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body class="bg-light">
     <div class="container-fluid">
@@ -19,7 +25,7 @@
                     <p class="lead">Your personal tutoring assistant, available 24/7.</p>
                 </div>
             </div>
-            <div class="col-12 col-md-4 col-lg-3 bg-white shadow d-flex flex-column justify-content-center p-4 order-2 order-md-2">
+            <div class="col-12 col-md-4 col-lg-3 bg-white shadow d-flex flex-column justify-content-start p-4 order-2 order-md-2 sidebar-scroll">
                 <h2 class="mb-4 d-flex align-items-center gap-2 justify-content-center">Register</h2>
                 <form method="post" id="registerForm">
                     <label for="email" class="form-label">Email</label>

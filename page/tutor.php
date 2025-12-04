@@ -1,3 +1,17 @@
+<?php
+require_once __DIR__ . '/../utils/PageBlocker.php';
+require_once __DIR__ . '/../config/db.php';
+
+$conn = new mysqli(host,user,pass,db);
+session_start();
+redirectUnauthorized($conn);
+redirectAdmin();
+
+if (!isset($_SESSION['ongoingTutorSession']) || !isset($_SESSION['ongoingTutorSession']['topicTitle']) || !isset($_SESSION['ongoingTutorSession']['topicPlan'])) {
+    header('Location: learn.php'); exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +29,7 @@
                 <i class="bi bi-chat-dots-fill text-primary"></i> TutorChat
             </h1>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary btn-sm">
+                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#topicPlanModal">
                     <i class="bi bi-journal-text"></i> View
                 </button>
                 <button class="btn btn-primary btn-sm">
@@ -24,6 +38,34 @@
             </div>
         </div>
     </nav>
+
+    <!-- Topic Plan Modal -->
+    <div class="modal fade" id="topicPlanModal" tabindex="-1" aria-labelledby="topicPlanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="topicPlanModalLabel">
+                        <i class="bi bi-journal-text text-primary"></i> Lesson Plan
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-muted">
+                        <?php
+                        if (isset($_SESSION['ongoingTutorSession']['topicPlan'])) {
+                            echo $_SESSION['ongoingTutorSession']['topicPlan'];
+                        } else {
+                            echo '<p class="text-center">No topic plan available.</p>';
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Container -->
     <div class="container-fluid d-flex flex-column" style="height: calc(100vh - 56px);">
@@ -131,7 +173,7 @@
                     </div>
                 `;
             }
-            
+
             row.appendChild(col);
             
             // Remove proceed button if it exists
@@ -157,7 +199,7 @@
                 
                 // Re-attach event listener to new button
                 document.getElementById('proceedButton').addEventListener('click', () => {
-                    sendMessage('Proceed with the lesson');
+                    sendMessage('Proceed.');
                 });
             }
             
@@ -265,7 +307,6 @@
             return div.innerHTML;
         }
 
-        // Event Listeners
         sendButton.addEventListener('click', () => {
             const message = messageInput.value.trim();
             if (message) {
@@ -281,10 +322,6 @@
                     sendMessage(message);
                 }
             }
-        });
-
-        proceedButton.addEventListener('click', () => {
-            sendMessage('Proceed with the lesson.');
         });
 
         sendMessage('Hello!');

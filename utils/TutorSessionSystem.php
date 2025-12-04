@@ -7,7 +7,7 @@ function startNewSession($topicTitle) {
     $_SESSION['ongoingTutorSession']['topicTitle'] = $topicTitle;
     try {
         $_SESSION['ongoingTutorSession']['topicPlan'] = generateLessonPlan($topicTitle);
-        header("Location: ../page/chat.php"); exit;
+        header("Location: ../page/tutor.php"); exit;
     }
     catch (Exception $e) {
         setPopupMessage("Failed to Generate a Lesson Plan");

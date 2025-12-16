@@ -13,7 +13,7 @@ displayPopupMessage();
 if (isset($_POST['startSession'])) {
     $topic = trim(isset($_POST['topicTitle']) ? $_POST['topicTitle'] : $_POST['startSession']);
     if ($topic != '') {
-        startNewSession($topic);
+        startNewSession($topic, $conn);
     }
     else {
         setPopupMessage("Please enter a topic.");
@@ -40,8 +40,8 @@ if (isset($_POST['startSession'])) {
                 <h1 class="h3 mb-0 text-nowrap"><i class="bi bi-chat-dots-fill icon-primary"></i> TutorChat</h1>
                 <nav class="d-flex flex-wrap gap-3 align-items-center">
                     <a href="learn.php" class="text-decoration-none fw-bold"><i class="bi bi-book me-1"></i>Learn</a>
-                    <a href="analytics.php" class="text-decoration-none"><i class="bi bi-clock-history me-1"></i>History</a>
-                    <a href="learn.php" class="text-decoration-none"><i class="bi bi-book me-1"></i>Feedback</a>
+                    <a href="history.php" class="text-decoration-none"><i class="bi bi-clock-history me-1"></i>History</a>
+                    <a href="feedback.php" class="text-decoration-none"><i class="bi bi-chat-square-text me-1"></i>Feedback</a>
                     <a href="settings.php" class="text-decoration-none"><i class="bi bi-person-circle me-1"></i>Settings</a>
                 </nav>
             </div>
@@ -223,7 +223,7 @@ if (isset($_POST['startSession'])) {
             card.innerHTML = `
                 <div class="overflow-hidden">
                     <div class="fw-medium text-truncate" style="min-width: 0;">${topicTitle}</div>
-                    <span class="badge bg-primary mt-1">Last Score: ${lastScore}%</span>
+                    <span class="badge bg-primary mt-1">Last Score: ${lastScore != null ? lastScore : 'No Quiz Taken'}</span>
                 </div>
                 <form method="post" class="flex-shrink-0">
                     <button onclick="displayPopupMessage('Generating tutor plan, please wait.');" type="submit" name="startSession" value="${topicTitle}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-repeat me-1"></i>Revisit</button>

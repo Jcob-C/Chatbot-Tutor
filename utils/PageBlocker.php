@@ -20,4 +20,16 @@ function redirectLearner() {
         header('Location: ../page/learn.php'); exit;
     }
 }
+
+function redirectFromTutor() {
+    if (!isset($_SESSION['ongoingTutorSession']) || !isset($_SESSION['ongoingTutorSession']['topic']) || !isset($_SESSION['ongoingTutorSession']['plan'])) {
+        header('Location: ../page/learn.php'); exit;
+    }
+}
+
+function redirectFromQuiz() {
+    if (!isset($_SESSION['ongoingTutorSession']) || !isset($_SESSION['ongoingTutorSession']['quiz']) || !isset($_SESSION['ongoingTutorSession']['topic']) || !isset($_SESSION['ongoingTutorSession']['id'])) {
+        header('Location: ../page/learn.php'); exit;
+    }
+}
 ?>

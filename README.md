@@ -22,7 +22,8 @@ CREATE TABLE verification_codes (
 
 CREATE TABLE topics (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL
+    title VARCHAR(255) NOT NULL,
+    plan TEXT NOT NULL
 );
 
 CREATE TABLE feedbacks (

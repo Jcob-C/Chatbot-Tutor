@@ -1,12 +1,23 @@
 <?php
-require_once __DIR__ . '/GeminiAPI.php';
+require_once __DIR__ . '/AI.php';
 require_once __DIR__ . '/PopupMessage/.php';
+require_once __DIR__ . '/../database/Topics.php';
+require_once __DIR__ . '/../database/TutorSessions.php';
 
-function startNewSession($topicTitle) {
+function startNewSession($topicTitle, $conn) {
     $_SESSION['ongoingTutorSession'] = [];
-    $_SESSION['ongoingTutorSession']['topicTitle'] = $topicTitle;
+    $_SESSION['ongoingTutorSession']['topic'] = $topicTitle;
     try {
-        $_SESSION['ongoingTutorSession']['topicPlan'] = generateLessonPlan($topicTitle);
+        $plan = getTopicPlan($conn, $topicTitle);
+        if (!$plan) {
+            $plan = getSessionPlan($conn, $topicTitle);
+        }
+        if ($plan) {
+            $_SESSION['ongoingTutorSession']['plan'] = $plan;
+        }
+        else {
+            $_SESSION['ongoingTutorSession']['plan'] = generateLessonPlan($topicTitle);
+        }
         header("Location: ../page/tutor.php"); exit;
     }
     catch (Exception $e) {
@@ -14,5 +25,10 @@ function startNewSession($topicTitle) {
         $_SESSION['ongoingTutorSession'] = [];
         return;
     }
+}
+
+function resetTutorSession() {
+    $_SESSION['ongoingTutorSession'] = [];
+    unset($_SESSION['ongoingTutorSession']);
 }
 ?>

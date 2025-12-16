@@ -12,6 +12,19 @@ function getTopicTitle($conn, $topicID) {
     return $result;
 }
 
+function getTopicPlan($conn, $topicTitle) {
+    $stmt = $conn->prepare("SELECT plan FROM topics WHERE LOWER(title) = LOWER(?) LIMIT 1");
+    $stmt->bind_param("s", $topicTitle);
+    $stmt->execute();
+
+    $plan = null;
+    $stmt->bind_result($plan);
+    $result = $stmt->fetch() ? $plan : null;
+
+    $stmt->close();
+    return $result;
+}
+
 function getTopicSearch($conn, $keyword, $limit, $page) {
     $offset = ($page - 1) * $limit;
     $search = "%{$keyword}%";

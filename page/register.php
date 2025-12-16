@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../utils/PageBlocker.php';
+
+session_start();
+redirectLoggedIn();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

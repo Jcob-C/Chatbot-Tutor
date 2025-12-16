@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../utils/PageBlocker.php';
 require_once __DIR__ . '/../utils/popupmessage/.php';
 require_once __DIR__ . '/../database/Users.php';
 require_once __DIR__ . '/../config/db.php';
@@ -7,6 +8,7 @@ $conn = new mysqli(host, user, pass, db);
 session_start();
 checkPost();
 displayPopupMessage();
+redirectLoggedIn();
 
 function checkPost() {
     if (isset($_POST['login'])) {

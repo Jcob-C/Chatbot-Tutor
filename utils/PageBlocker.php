@@ -9,6 +9,13 @@ function redirectUnauthorized($conn) {
     }
 }
 
+function redirectLoggedIn() {
+    if (isset($_SESSION['loggedinUserID'])) {
+        redirectLearner();
+        redirectAdmin();
+    }
+}
+
 function redirectAdmin() {
     if ($_SESSION['loggedinUserRole'] === 'admin') {
         header('Location: ../page/admin.php'); exit;

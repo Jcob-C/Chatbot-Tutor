@@ -25,6 +25,7 @@ function login() {
         $_SESSION = [];
         $_SESSION['loggedinUserID'] = getUserID($conn, $cleanEmail);
         $_SESSION['loggedinUserRole'] = getUserRole($conn, $_SESSION['loggedinUserID']);
+        $_SESSION['loggedinName'] = getNickname($conn, $_SESSION['loggedinUserID']);
 
         if (!checkActivated($conn, $_SESSION['loggedinUserID'])) {
             setPopupMessage("Deactivated Account");

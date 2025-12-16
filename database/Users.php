@@ -73,13 +73,12 @@ function getHashedPasswordByID($conn, $userID) {
     $stmt = $conn->prepare("SELECT pass FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param("i", $userID);
     $stmt->execute();
-
-    $hashedPassword = null;
-    $stmt->bind_result($hashedPassword);
-    $result = $stmt->fetch() ? $hashedPassword : null;
-
+    
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
     $stmt->close();
-    return $result;
+    return $row ? $row['pass'] : null;
 }
 
 function getNickname($conn, $userID) {
@@ -87,12 +86,11 @@ function getNickname($conn, $userID) {
     $stmt->bind_param("i", $userID);
     $stmt->execute();
 
-    $nickname = null;
-    $stmt->bind_result($nickname);
-    $result = $stmt->fetch() ? $nickname : null;
-
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
     $stmt->close();
-    return $result;
+    return $row ? $row['nickname'] : null;
 }
 
 function checkActivated($conn, $userID) {

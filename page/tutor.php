@@ -32,14 +32,14 @@ redirectFromTutor();
                 </div>
                 <div class="col-lg-5 col-md-12">
                     <div class="d-flex gap-2 justify-content-lg-end">
-                        <button class="btn btn-outline-primary" id="saveSessionButton" onclick="window.location.href='learn.php'">
+                        <button class="btn btn-outline-primary" onclick="window.location.href='learn.php'">
                             <i class="bi bi-x-circle me-2"></i> Exit    
                         </button>
                         <button class="btn btn-outline-primary" onclick="popupLessonPlan()">
-                            <i class="bi bi-file-text me-2"></i> View
+                            <i class="bi bi-file-text me-2"></i> Lesson Plan
                         </button>
                         <button class="btn btn-success" id="saveSessionButton" onclick="handleSaveClick()">
-                            <i class="bi bi-check-circle me-2"></i> Save
+                            <i class="bi bi-check-circle me-2"></i> Save Session
                         </button>
                     </div>
                 </div>
@@ -101,6 +101,7 @@ redirectFromTutor();
         let isWaitingForResponse = false;
         let lastAIMessage = "";
         let lastUserMessage = "";
+        let allowLeave = false;
 
         const messagesContainer = document.getElementById('chatMessagesContainer').querySelector('.container-fluid');
 
@@ -180,7 +181,6 @@ redirectFromTutor();
                 currentSectionIndex++;
                 section = sections[currentSectionIndex];
                 document.getElementById('currentSection').textContent = section;
-                addMessage(false, `Moving to ${section}.`);
                 
                 // Enable previous button since we're no longer at the start
                 document.getElementById('previousSectionButton').disabled = false;
@@ -189,6 +189,8 @@ redirectFromTutor();
                 if (currentSectionIndex === sections.length - 1) {
                     document.getElementById('nextSectionButton').disabled = true;
                 }
+
+                sendMessage(`Move forward to ${section}.`);
             }
         }
 
@@ -197,7 +199,6 @@ redirectFromTutor();
                 currentSectionIndex--;
                 section = sections[currentSectionIndex];
                 document.getElementById('currentSection').textContent = section;
-                addMessage(false, `Moving back to ${section}.`);
                 
                 // Enable next button if it was disabled
                 document.getElementById('nextSectionButton').disabled = false;
@@ -206,6 +207,8 @@ redirectFromTutor();
                 if (currentSectionIndex === 0) {
                     document.getElementById('previousSectionButton').disabled = true;
                 }
+
+                sendMessage(`Move back to ${section}.`);
             }
         }
 
@@ -239,6 +242,7 @@ redirectFromTutor();
                 if (result.trim() === 'saved') {
                     displayPopupMessage('Session saved successfully! Redirecting to quiz...');
                     setTimeout(() => {
+                        allowLeave = true;
                         window.location.href = 'quiz.php';
                     }, 1500);
                 } else {
@@ -258,6 +262,22 @@ redirectFromTutor();
             document.getElementById('messageInput').disabled = disabled;
             document.getElementById('sendButton').disabled = disabled;
         }
+
+        document.getElementById("messageInput").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // prevent form submit if inside a form
+                handleSendClick();      // same action as clicking the button
+            }
+        });
+
+        window.addEventListener("beforeunload", function (event) {
+            if (!allowLeave) {
+                event.preventDefault();
+                event.returnValue = ""; // Required for Chrome, Edge, Firefox
+            }
+        });
+
+        sendMessage("Let's chat!");
     </script>
 </body>
 </html>

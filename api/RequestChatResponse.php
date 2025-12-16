@@ -13,7 +13,7 @@ try {
     $aiMessage = $data['aimessage'];
     $userMessage = $data['usermessage'];
 
-    echo generateChatResponse($lessonPlan, $currentSection, $aiMessage, $userMessage);
+    echo generateChatResponse($lessonPlan, $currentSection, $aiMessage, $userMessage, $_SESSION['loggedinName']);
 } 
 catch (Exception $e) {
     echo "AI Response Failed";

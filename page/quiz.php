@@ -15,8 +15,9 @@ $quizTitle = $_SESSION['ongoingTutorSession']['topic'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['skip_quiz'])) {
+        $sessionId = $_SESSION['ongoingTutorSession']['id'];
         resetTutorSession();
-        header('Location: learn.php'); 
+        header('Location: session.php?id=' . $sessionId); 
         exit;
     }
     
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sessionId = $_SESSION['ongoingTutorSession']['id'];
         updateSessionQuiz($conn, $sessionId, $percentage);
         resetTutorSession();
-        header('Location: learn.php'); 
+        header('Location: session.php?id=' . $sessionId); 
         exit;
     }
 }

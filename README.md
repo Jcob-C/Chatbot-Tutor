@@ -1,5 +1,3 @@
-# **Database Setup**
-
 ```sql
 CREATE DATABASE tutorchat;
 USE tutorchat;
@@ -24,15 +22,6 @@ CREATE TABLE topics (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     plan TEXT NOT NULL
-);
-
-CREATE TABLE feedbacks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    descr TEXT NOT NULL,
-    submitted DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE tutor_sessions (

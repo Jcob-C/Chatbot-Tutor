@@ -42,26 +42,26 @@ function getLastSessionByTopicSortedByScoreAsc($conn, $id, $limit, $page) {
     $offset = ($page - 1) * $limit;
 
     $stmt = $conn->prepare("
-        SELECT s1.topic_title, s1.quiz_score
-        FROM tutor_sessions s1
-        INNER JOIN (
-            SELECT LOWER(topic_title) AS topic_key,
-                   MAX(
-                       CASE WHEN quiz_score IS NOT NULL THEN concluded ELSE NULL END
-                   ) AS last_scored_concluded,
-                   MAX(concluded) AS last_concluded
-            FROM tutor_sessions
-            WHERE user_id = ?
-            GROUP BY topic_key
-        ) s2
-        ON LOWER(s1.topic_title) = s2.topic_key
-        AND s1.concluded = COALESCE(s2.last_scored_concluded, s2.last_concluded)
-        WHERE s1.user_id = ?
-        ORDER BY s1.quiz_score ASC
-        LIMIT ? OFFSET ?
+    SELECT topic_title, quiz_score
+    FROM (
+        SELECT
+            topic_title,
+            quiz_score,
+            ROW_NUMBER() OVER (
+                PARTITION BY LOWER(topic_title)
+                ORDER BY
+                    (quiz_score IS NULL) ASC,
+                    id DESC
+            ) AS rn
+        FROM tutor_sessions
+        WHERE user_id = ?
+    ) t
+    WHERE rn = 1
+    ORDER BY quiz_score ASC
+    LIMIT ? OFFSET ?;
     ");
 
-    $stmt->bind_param("iiii", $id, $id, $limit, $offset);
+    $stmt->bind_param("iii", $id, $limit, $offset);
     $stmt->execute();
 
     $result = $stmt->get_result();
@@ -70,6 +70,7 @@ function getLastSessionByTopicSortedByScoreAsc($conn, $id, $limit, $page) {
     $stmt->close();
     return $sessions;
 }
+
 
 
 function getLatestUserSessions($conn, $userID, $limit, $page) {

@@ -41,7 +41,6 @@ if (isset($_POST['startSession'])) {
                 <nav class="d-flex flex-wrap gap-3 align-items-center">
                     <a href="learn.php" class="text-decoration-none fw-bold"><i class="bi bi-book me-1"></i>Learn</a>
                     <a href="history.php" class="text-decoration-none"><i class="bi bi-clock-history me-1"></i>History</a>
-                    <a href="feedback.php" class="text-decoration-none"><i class="bi bi-chat-square-text me-1"></i>Feedback</a>
                     <a href="settings.php" class="text-decoration-none"><i class="bi bi-person-circle me-1"></i>Settings</a>
                 </nav>
             </div>
@@ -223,7 +222,7 @@ if (isset($_POST['startSession'])) {
             card.innerHTML = `
                 <div class="overflow-hidden">
                     <div class="fw-medium text-truncate" style="min-width: 0;">${topicTitle}</div>
-                    <span class="badge bg-primary mt-1">Last Score: ${lastScore != null ? lastScore : 'No Quiz Taken'}</span>
+                    <span class="badge bg-primary mt-1">Last Score: ${lastScore != null ? (lastScore+'%') : 'No Quiz Taken'}</span>
                 </div>
                 <form method="post" class="flex-shrink-0">
                     <button onclick="displayPopupMessage('Generating tutor plan, please wait.');" type="submit" name="startSession" value="${topicTitle}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-repeat me-1"></i>Revisit</button>

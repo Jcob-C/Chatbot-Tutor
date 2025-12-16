@@ -3,46 +3,20 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../database/TutorSessions.php';
 
 session_start();
-
-// Check if user is logged in
-if (!isset($_SESSION['loggedinUserID'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Function to initialize database connection
-function initDB() {
-    $conn = new mysqli(host, user, pass, db);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    return $conn;
-}
-
-// Get session ID from URL
+$conn = new mysqli(host, user, pass, db);
 $session_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($session_id <= 0) {
-    header("Location: history.php");
-    exit();
-}
-
-// Initialize database and get session
-$conn = initDB();
 $session_data = getSession($conn, $session_id);
 
-// Check if session exists and belongs to user
-if (empty($session_data) || $session_data[0]['user_id'] != $_SESSION['loggedinUserID']) {
-    header("Location: history.php");
+if ($session_id <= 0) {
+    header("Location: learn.php");
     exit();
 }
 
 $session = $session_data[0];
 $transcript_data = json_decode($session['transcript'], true);
 $transcript = isset($transcript_data['transcript']) ? $transcript_data['transcript'] : [];
-
-$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,8 +34,7 @@ $conn->close();
                 <h1 class="h3 mb-0 text-nowrap"><i class="bi bi-chat-dots-fill icon-primary"></i> TutorChat</h1>
                 <nav class="d-flex flex-wrap gap-3 align-items-center">
                     <a href="learn.php" class="text-decoration-none"><i class="bi bi-book me-1"></i>Learn</a>
-                    <a href="history.php" class="text-decoration-none fw-bold"><i class="bi bi-clock-history me-1"></i>History</a>
-                    <a href="feedback.php" class="text-decoration-none"><i class="bi bi-chat-square-text me-1"></i>Feedback</a>
+                    <a href="history.php" class="text-decoration-none"><i class="bi bi-clock-history me-1"></i>History</a>
                     <a href="settings.php" class="text-decoration-none"><i class="bi bi-person-circle me-1"></i>Settings</a>
                 </nav>
             </div>

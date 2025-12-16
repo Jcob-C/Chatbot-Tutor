@@ -1,21 +1,22 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../database/TutorSessions.php';
+require_once __DIR__ . '/../utils/PageBlocker.php';
 
 session_start();
+$conn = new mysqli(host, user, pass, db);
+redirectUnauthorized($conn);
+redirectAdmin();
 
-// Function to initialize database connection
-function initDB() {
-    $conn = new mysqli(host, user, pass, db);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    return $conn;
-}
+$pageData = getPageData($conn, $_SESSION['loggedinUserID']);
+$sessions = $pageData['sessions'];
+$has_prev = $pageData['has_prev'];
+$has_next = $pageData['has_next'];
+$current_page = $pageData['current_page'];
+$error_message = $pageData['error_message'];
 
-// Function to get page data
 function getPageData($conn, $userID) {
-    $limit = 10;
+    $limit = 5;
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
     
     try {
@@ -27,7 +28,8 @@ function getPageData($conn, $userID) {
             'current_page' => $data['page'],
             'error_message' => null
         ];
-    } catch (Exception $e) {
+    } 
+    catch (Exception $e) {
         return [
             'sessions' => [],
             'has_prev' => false,
@@ -38,16 +40,6 @@ function getPageData($conn, $userID) {
     }
 }
 
-// Initialize
-$conn = initDB();
-$pageData = getPageData($conn, $_SESSION['loggedinUserID']);
-
-// Extract variables for template
-$sessions = $pageData['sessions'];
-$has_prev = $pageData['has_prev'];
-$has_next = $pageData['has_next'];
-$current_page = $pageData['current_page'];
-$error_message = $pageData['error_message'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +60,6 @@ $error_message = $pageData['error_message'];
                 <nav class="d-flex flex-wrap gap-3 align-items-center">
                     <a href="learn.php" class="text-decoration-none"><i class="bi bi-book me-1"></i>Learn</a>
                     <a href="history.php" class="text-decoration-none fw-bold"><i class="bi bi-clock-history me-1"></i>History</a>
-                    <a href="feedback.php" class="text-decoration-none"><i class="bi bi-chat-square-text me-1"></i>Feedback</a>
                     <a href="settings.php" class="text-decoration-none"><i class="bi bi-person-circle me-1"></i>Settings</a>
                 </nav>
             </div>
@@ -87,7 +78,7 @@ $error_message = $pageData['error_message'];
                         <i class="bi bi-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error_message); ?>
                     </div>
                 <?php endif; ?>
-
+                <br>
                 <?php if (empty($sessions)): ?>
                     <div class="card text-center py-5">
                         <i class="bi bi-clock-history icon-xl icon-primary mb-3"></i>
@@ -98,7 +89,7 @@ $error_message = $pageData['error_message'];
                 <?php else: ?>
                     <div class="row g-3">
                         <?php foreach ($sessions as $session): ?>
-                            <div class="col-12">
+                            <div class="row" style="height: 120px;">
                                 <a href="session.php?id=<?php echo $session['id']; ?>" class="text-decoration-none">
                                     <div class="card hover-shadow">
                                         <div class="d-flex justify-content-between align-items-start">
